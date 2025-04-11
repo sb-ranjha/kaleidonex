@@ -2,33 +2,12 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { XMarkIcon } from "@heroicons/react/24/outline";
-import { db } from "../firebase";
-import { collection, addDoc } from "firebase/firestore";
+import InternshipForm from "../components/InternshipForm";
+import ServiceRequestForm from "../components/ServiceRequestForm";
 
 const Hero = () => {
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedOption, setSelectedOption] = useState(null);
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    contactNumber: "",
-    domain: "",
-    message: "",
-    // Additional fields for services
-    companyName: "",
-    projectType: "",
-    budget: "",
-    timeline: "",
-    // Additional fields for internship
-    education: "",
-    college: "",
-    graduationYear: "",
-    experience: "",
-  });
-  const [alertMessage, setAlertMessage] = useState("");
-  const [alertVisible, setAlertVisible] = useState(false);
-  const [loading, setLoading] = useState(false);
-  const [errors, setErrors] = useState({});
 
   // Show the popup when the component mounts
   useEffect(() => {
@@ -43,100 +22,13 @@ const Hero = () => {
     return () => clearTimeout(timer);
   }, []);
 
-  const validatePhoneNumber = (number) => {
-    const phoneRegex = /^\d{10}$/;
-    return phoneRegex.test(number);
-  };
-
-  const validateForm = () => {
-    const newErrors = {};
-    if (!formData.name) newErrors.name = "Name is required.";
-    if (!formData.email) newErrors.email = "Email is required.";
-    if (!validatePhoneNumber(formData.contactNumber)) {
-      newErrors.contactNumber = "Please enter a valid mobile number (10 digits).";
-    }
-
-    if (selectedOption === 'services') {
-      if (!formData.companyName) newErrors.companyName = "Company name is required.";
-      if (!formData.projectType) newErrors.projectType = "Project type is required.";
-      if (!formData.budget) newErrors.budget = "Budget range is required.";
-      if (!formData.timeline) newErrors.timeline = "Timeline is required.";
-    } else {
-      if (!formData.education) newErrors.education = "Education is required.";
-      if (!formData.college) newErrors.college = "College/University is required.";
-      if (!formData.graduationYear) newErrors.graduationYear = "Graduation year is required.";
-      if (!formData.domain) newErrors.domain = "Domain selection is required.";
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validateForm()) return;
-
-    setLoading(true);
-    try {
-      // Store data in Firestore with the selected option
-      await addDoc(collection(db, "callbacks"), {
-        type: selectedOption,
-        name: formData.name,
-        email: formData.email,
-        contactNumber: formData.contactNumber,
-        domain: formData.domain,
-        message: formData.message,
-      });
-      setAlertMessage("Your application has been submitted successfully!");
-      setAlertVisible(true);
-      setTimeout(() => setAlertVisible(false), 3000);
-    } catch (error) {
-      console.error("Error saving data:", error);
-      setAlertMessage("There was an error submitting your application.");
-      setAlertVisible(true);
-      setTimeout(() => setAlertVisible(false), 3000);
-    } finally {
-      setLoading(false);
-      setFormData({
-        name: "",
-        email: "",
-        contactNumber: "",
-        domain: "",
-        message: "",
-      });
-      setErrors({});
-      setIsFormOpen(false);
-      setSelectedOption(null);
-    }
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-    setErrors((prev) => ({ ...prev, [name]: "" }));
-  };
-
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
   };
 
   return (
     <section className="relative min-h-screen bg-primary overflow-hidden overflow-x-hidden">
-      {/* Alert Message */}
-      {alertVisible && (
-        <motion.div
-          className="fixed top-4 left-1/2 transform -translate-x-1/2 bg-green-500 text-white p-4 rounded-lg shadow-lg z-50"
-          initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-        >
-          {alertMessage}
-        </motion.div>
-      )}
+
 
       {/* Background image watermark - Hidden on mobile */}
       <motion.div
@@ -436,7 +328,7 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-start p-0"
+          className="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-start p-4 pt-8"
         >
           <motion.div
             initial={{ opacity: 0, y: -50 }}
@@ -494,309 +386,21 @@ const Hero = () => {
               ) : (
                 // Form Screen
                 <>
-                  <h2 className="text-2xl font-bold text-gray-900 mb-4 sticky top-0 bg-white pb-2">
-                    {selectedOption === 'services' ? 'Request Services' : 'Apply for Internship'}
-                  </h2>
-
-                  <form onSubmit={handleSubmit} className="space-y-3">
-                    {/* Grid layout for better organization */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                      {/* Common Fields in grid */}
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Name
-                        </label>
-                        <input
-                          type="text"
-                          name="name"
-                          value={formData.name}
-                          onChange={handleChange}
-                          placeholder="Enter Your Name"
-                          className={`w-full px-3 py-2 border ${
-                            errors.name ? "border-red-500" : "border-gray-300"
-                          } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                          required
-                        />
-                        {errors.name && (
-                          <p className="text-red-500 text-xs mt-1">{errors.name}</p>
-                        )}
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Email
-                        </label>
-                        <input
-                          type="email"
-                          name="email"
-                          value={formData.email}
-                          onChange={handleChange}
-                          placeholder="Enter your email"
-                          className={`w-full px-3 py-2 border ${
-                            errors.email ? "border-red-500" : "border-gray-300"
-                          } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                          required
-                        />
-                        {errors.email && (
-                          <p className="text-red-500 text-xs mt-1">{errors.email}</p>
-                        )}
-                      </div>
-
-                      <div className="sm:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Contact Number
-                        </label>
-                        <input
-                          type="tel"
-                          name="contactNumber"
-                          value={formData.contactNumber}
-                          onChange={handleChange}
-                          placeholder="Enter your contact number (10 digits)"
-                          className={`w-full px-3 py-2 border ${
-                            errors.contactNumber ? "border-red-500" : "border-gray-300"
-                          } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                          required
-                        />
-                        {errors.contactNumber && (
-                          <p className="text-red-500 text-xs mt-1">{errors.contactNumber}</p>
-                        )}
-                      </div>
-
-                      {/* Service-specific Fields */}
-                      {selectedOption === 'services' && (
-                        <>
-                          <div className="sm:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Company Name
-                            </label>
-                            <input
-                              type="text"
-                              name="companyName"
-                              value={formData.companyName}
-                              onChange={handleChange}
-                              placeholder="Enter your company name"
-                              className={`w-full px-3 py-2 border ${
-                                errors.companyName ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Project Type
-                            </label>
-                            <select
-                              name="projectType"
-                              value={formData.projectType}
-                              onChange={handleChange}
-                              className={`w-full px-3 py-2 border ${
-                                errors.projectType ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            >
-                              <option value="">Select Type</option>
-                              <option value="website">Website</option>
-                              <option value="mobile-app">Mobile App</option>
-                              <option value="web-app">Web App</option>
-                              <option value="e-commerce">E-commerce</option>
-                              <option value="custom">Custom</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Budget Range
-                            </label>
-                            <select
-                              name="budget"
-                              value={formData.budget}
-                              onChange={handleChange}
-                              className={`w-full px-3 py-2 border ${
-                                errors.budget ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            >
-                              <option value="">Select Budget</option>
-                              <option value="0-5k">Under $5k</option>
-                              <option value="5k-10k">$5k - $10k</option>
-                              <option value="10k-25k">$10k - $25k</option>
-                              <option value="25k-50k">$25k - $50k</option>
-                              <option value="50k+">$50k+</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Timeline
-                            </label>
-                            <select
-                              name="timeline"
-                              value={formData.timeline}
-                              onChange={handleChange}
-                              className={`w-full px-3 py-2 border ${
-                                errors.timeline ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            >
-                              <option value="">Select Timeline</option>
-                              <option value="1-2-months">1-2 months</option>
-                              <option value="2-4-months">2-4 months</option>
-                              <option value="4-6-months">4-6 months</option>
-                              <option value="6+-months">6+ months</option>
-                            </select>
-                          </div>
-                        </>
-                      )}
-
-                      {/* Internship-specific Fields */}
-                      {selectedOption === 'internship' && (
-                        <>
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Education
-                            </label>
-                            <select
-                              name="education"
-                              value={formData.education}
-                              onChange={handleChange}
-                              className={`w-full px-3 py-2 border ${
-                                errors.education ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            >
-                              <option value="">Select Level</option>
-                              <option value="undergraduate">Undergraduate</option>
-                              <option value="graduate">Graduate</option>
-                              <option value="postgraduate">Post Graduate</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Graduation Year
-                            </label>
-                            <select
-                              name="graduationYear"
-                              value={formData.graduationYear}
-                              onChange={handleChange}
-                              className={`w-full px-3 py-2 border ${
-                                errors.graduationYear ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            >
-                              <option value="">Select Year</option>
-                              <option value="2024">2024</option>
-                              <option value="2025">2025</option>
-                              <option value="2026">2026</option>
-                              <option value="2027">2027</option>
-                            </select>
-                          </div>
-
-                          <div className="sm:col-span-2">
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              College/University
-                            </label>
-                            <input
-                              type="text"
-                              name="college"
-                              value={formData.college}
-                              onChange={handleChange}
-                              placeholder="Enter your college/university name"
-                              className={`w-full px-3 py-2 border ${
-                                errors.college ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            />
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Domain
-                            </label>
-                            <select
-                              name="domain"
-                              value={formData.domain}
-                              onChange={handleChange}
-                              className={`w-full px-3 py-2 border ${
-                                errors.domain ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            >
-                              <option value="">Select Domain</option>
-                              <option value="web-development">Web Dev</option>
-                              <option value="data-science">Data Science</option>
-                              <option value="ux-ui">UX/UI Design</option>
-                              <option value="digital-marketing">Digital Marketing</option>
-                              <option value="cloud-computing">Cloud Computing</option>
-                            </select>
-                          </div>
-
-                          <div>
-                            <label className="block text-sm font-medium text-gray-700 mb-1">
-                              Experience
-                            </label>
-                            <select
-                              name="experience"
-                              value={formData.experience}
-                              onChange={handleChange}
-                              className={`w-full px-3 py-2 border ${
-                                errors.experience ? "border-red-500" : "border-gray-300"
-                              } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                              required
-                            >
-                              <option value="">Select Level</option>
-                              <option value="beginner">Beginner</option>
-                              <option value="intermediate">Intermediate</option>
-                              <option value="advanced">Advanced</option>
-                            </select>
-                          </div>
-                        </>
-                      )}
-
-                      {/* Message Input - Full Width */}
-                      <div className="sm:col-span-2">
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          {selectedOption === 'services' ? 'Project Description' : 'Why do you want to join?'}
-                        </label>
-                        <textarea
-                          name="message"
-                          value={formData.message}
-                          onChange={handleChange}
-                          placeholder={
-                            selectedOption === 'services'
-                              ? "Describe your project requirements and goals"
-                              : "Tell us why you want to join our internship program"
-                          }
-                          rows="3"
-                          className={`w-full px-3 py-2 border ${
-                            errors.message ? "border-red-500" : "border-gray-300"
-                          } rounded-lg focus:ring-2 focus:ring-purple-500 focus:border-transparent text-sm`}
-                          required
-                        />
-                      </div>
-                    </div>
-
-                    {/* Action Buttons - Sticky Bottom */}
-                    <div className="sticky bottom-0 bg-white pt-3 mt-4 flex gap-3">
-                      <button
-                        type="button"
-                        onClick={() => setSelectedOption(null)}
-                        className="w-1/3 bg-gray-100 text-gray-700 py-2 rounded-lg font-medium hover:bg-gray-200 transition-colors text-sm"
-                      >
-                        Back
-                      </button>
-                      <button
-                        type="submit"
-                        className={`w-2/3 bg-purple-600 text-white py-2 rounded-lg font-medium hover:bg-purple-700 transition-colors text-sm ${
-                          loading ? "opacity-50 cursor-not-allowed" : ""
-                        }`}
-                        disabled={loading}
-                      >
-                        {loading ? "Submitting..." : "Submit Application"}
-                      </button>
-                    </div>
-                  </form>
+                  {selectedOption === 'services' ? (
+                    <ServiceRequestForm
+                      onClose={() => {
+                        setIsFormOpen(false);
+                        setSelectedOption(null);
+                      }}
+                    />
+                  ) : (
+                    <InternshipForm
+                      onClose={() => {
+                        setIsFormOpen(false);
+                        setSelectedOption(null);
+                      }}
+                    />
+                  )}
                 </>
               )}
             </div>
