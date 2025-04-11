@@ -625,7 +625,7 @@ const WebDevelopment = () => {
             className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-3xl p-10 sm:p-16 text-center relative overflow-hidden shadow-2xl border border-white/10"
           >
             {/* Decorative Elements */}
-            <div className="absolute top-0 left-0 w-full h-full bg-grid-pattern opacity-10"></div>
+            <div className="absolute top-0 left-0 w-full h-full bg-black/5 opacity-20"></div>
             <div className="absolute -top-20 -right-20 w-64 h-64 bg-purple-500/30 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-20 -left-20 w-64 h-64 bg-pink-500/20 rounded-full blur-3xl"></div>
 
