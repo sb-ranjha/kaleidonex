@@ -1,0 +1,1 @@
+"use strict";Object.defineProperty(exports,"__esModule",{value:!0}),exports.debounce=void 0;const debounce=(e,o)=>{let t;return function(){for(var r=arguments.length,u=new Array(r),n=0;n<r;n++)u[n]=arguments[n];clearTimeout(t),t=setTimeout((()=>{clearTimeout(t),e(...u)}),o)}};exports.debounce=debounce;

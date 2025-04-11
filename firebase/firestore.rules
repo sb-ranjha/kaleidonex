@@ -1,0 +1,8 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /enrollments/{enrollment} {
+      allow read, write: if true;  // Allow both reading and writing to enrollments collection
+    }
+  }
+}
