@@ -97,6 +97,8 @@ const TestimonialCard = ({
   courseTaken,
   isBlinking,
   isMobile,
+  index = 0,
+  className = '',
 }) => {
   // const [imageError, setImageError] = useState(false);
   const [setImageError] = useState(false);
@@ -135,24 +137,31 @@ const TestimonialCard = ({
       }}
       transition={{
         duration: 0.5,
+        delay: index * 0.1,
         ease: "easeOut"
       }}
       onHoverStart={() => !isMobile && setIsHovered(true)}
       onHoverEnd={() => !isMobile && setIsHovered(false)}
-      className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 sm:p-8 shadow-lg hover:shadow-glow relative cursor-pointer group"
+      className={`bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl p-6 sm:p-8 shadow-lg hover:shadow-glow relative cursor-pointer group overflow-hidden transition-all duration-300 max-w-full ${className}`}
     >
+      {/* Background gradient effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+      {/* Animated corner accent */}
+      <div className="absolute -top-1 -right-1 w-20 h-20 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-bl-full transform rotate-12 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+
       {/* Tooltip */}
       <div className={tooltipStyles}>
         {isMobile ? (
           <span>{role}</span>
         ) : (
           <div className="
-            bg-gradient-to-r from-primary-light to-primary-dark
+            bg-gradient-to-r from-purple-600 to-pink-500
             text-white
             px-2 py-0.5 sm:px-3 sm:py-1
             text-[10px] sm:text-xs md:text-sm
             font-medium
-            rounded-tr-lg rounded-bl-lg
+            rounded-full
             shadow-md
             border border-white/20
             flex items-center gap-1
@@ -188,14 +197,17 @@ const TestimonialCard = ({
         transition={{ delay: 0.2 }}
         className="flex items-center"
       >
-        <motion.img
-          whileHover={{ scale: 1.1 }}
-          transition={{ type: "spring", stiffness: 300 }}
-          src={image}
-          alt={name}
-          className="w-14 h-14 rounded-full border-2 border-white/50 shadow-lg object-cover"
-          onError={() => setImageError(true)}
-        />
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full blur-sm transform scale-110 opacity-50 group-hover:opacity-100 transition-opacity duration-300"></div>
+          <motion.img
+            whileHover={{ scale: 1.1 }}
+            transition={{ type: "spring", stiffness: 300 }}
+            src={image}
+            alt={name}
+            className="w-14 h-14 rounded-full border-2 border-white/30 shadow-lg object-cover relative z-10 group-hover:border-white/70 transition-all duration-300"
+            onError={() => setImageError(true)}
+          />
+        </div>
         <div className="ml-4">
           <h4 className="font-bold text-white text-lg group-hover:text-shadow-glow transition-all duration-300">{name}</h4>
         </div>
@@ -212,16 +224,16 @@ const TestimonialCard = ({
           initial={{ opacity: 0, x: -10 }}
           animate={{ opacity: 0.7, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -left-2 -top-2 text-4xl text-purple-400"
+          className="absolute -left-2 -top-2 text-5xl text-purple-400 opacity-60 group-hover:opacity-100 transition-opacity duration-300"
         >
           "
         </motion.span>
-        <p className="text-gray-200 italic px-6 text-lg leading-relaxed">{quote}</p>
+        <p className="text-gray-200 italic px-6 text-lg leading-relaxed group-hover:text-white transition-colors duration-300">{quote}</p>
         <motion.span
           initial={{ opacity: 0, x: 10 }}
           animate={{ opacity: 0.7, x: 0 }}
           transition={{ delay: 0.4 }}
-          className="absolute -right-2 -bottom-2 text-4xl text-purple-400"
+          className="absolute -right-2 -bottom-2 text-5xl text-purple-400 opacity-60 group-hover:opacity-100 transition-opacity duration-300"
         >
           "
         </motion.span>
@@ -265,6 +277,7 @@ const Testimonials = () => {
   const [isBlinking, setIsBlinking] = useState(false); // Changed from flippedIndex to isBlinking
   const [isPaused, setIsPaused] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
+  const [activeIndex, setActiveIndex] = useState(0);
 
   // Check if mobile
   useEffect(() => {
@@ -313,29 +326,37 @@ const Testimonials = () => {
     return () => clearInterval(interval);
   }, [isPaused, isMobile]);
 
-  const handleCardHover = () => setIsPaused(true);
+  const handleCardHover = (index) => {
+    setIsPaused(true);
+    setActiveIndex(index);
+  };
   const handleCardLeave = () => setIsPaused(false);
 
   return (
-    <section className="bg-gradient-to-b from-primary to-primary-dark relative overflow-hidden
+    <section className="bg-gradient-to-b from-primary to-primary-dark relative overflow-hidden overflow-x-hidden
                       py-16 sm:py-20 md:py-24 lg:py-28">
-      {/* Background Elements */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+      {/* Enhanced Background Elements */}
+      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-purple-600/20 to-pink-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-blue-600/20 to-purple-500/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
 
       {/* Floating Elements */}
       <motion.div
-        className="absolute top-40 left-20 w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg blur-sm"
+        className="absolute top-40 left-20 w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg blur-sm hidden md:block"
         animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-40 right-20 w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-sm"
+        className="absolute bottom-40 right-20 w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-sm hidden md:block"
         animate={{ y: [0, 20, 0], rotate: [0, -10, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
+      <motion.div
+        className="absolute top-1/3 right-1/3 w-12 h-12 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg blur-sm hidden md:block"
+        animate={{ y: [0, -15, 0], rotate: [0, -5, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
+      />
 
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10 max-w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -343,16 +364,58 @@ const Testimonials = () => {
           viewport={{ once: true }}
           className="text-center mb-12 sm:mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
-            </svg>
+          <motion.div
+            className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6"
+            initial={{ scale: 0, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 400, damping: 15, delay: 0.2 }}
+          >
+            <motion.div
+              animate={{ rotate: [0, 10, 0, -10, 0] }}
+              transition={{ duration: 2, repeat: Infinity, repeatDelay: 3 }}
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-purple-400" viewBox="0 0 20 20" fill="currentColor">
+                <path fillRule="evenodd" d="M18 10c0 3.866-3.582 7-8 7a8.841 8.841 0 01-4.083-.98L2 17l1.338-3.123C2.493 12.767 2 11.434 2 10c0-3.866 3.582-7 8-7s8 3.134 8 7zM7 9H5v2h2V9zm8 0h-2v2h2V9zM9 9h2v2H9V9z" clipRule="evenodd" />
+              </svg>
+            </motion.div>
             <span className="text-purple-300 text-sm font-medium">Student Testimonials</span>
-          </div>
+          </motion.div>
 
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 text-shadow-glow">
-            What Our <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">Students</span> Say
-          </h2>
+          <motion.h2
+            className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 text-shadow-glow relative"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.8, delay: 0.4 }}
+          >
+            <motion.span
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.6 }}
+            >
+              What Our
+            </motion.span>{" "}
+            <motion.span
+              className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500 relative inline-block"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.8, type: "spring", stiffness: 200 }}
+            >
+              Students
+              <motion.span
+                className="absolute -bottom-2 left-0 right-0 h-1 bg-gradient-to-r from-purple-400 to-pink-500 rounded-full"
+                initial={{ width: 0, opacity: 0 }}
+                animate={{ width: "100%", opacity: 1 }}
+                transition={{ delay: 1.2, duration: 0.8 }}
+              />
+            </motion.span>{" "}
+            <motion.span
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 1 }}
+            >
+              Say
+            </motion.span>
+          </motion.h2>
 
           <p className="text-lg text-gray-300 max-w-2xl mx-auto">
             Hear from our students about their learning experiences and success stories
@@ -368,19 +431,37 @@ const Testimonials = () => {
           className={`
           grid gap-4 sm:gap-6 md:gap-8 lg:gap-10
           ${isMobile ? 'grid-cols-1' : 'grid-cols-2 lg:grid-cols-3'}
-          max-w-[1200px] mx-auto
+          max-w-full sm:max-w-[1200px] mx-auto
+          px-2 sm:px-0
         `}>
           {displayedTestimonials.map((testimonial, index) => (
             <TestimonialCard
               key={`${testimonial.id}-${index}`}
               {...testimonial}
               isBlinking={isBlinking}
-              onMouseEnter={handleCardHover}
+              onMouseEnter={() => handleCardHover(index)}
               onMouseLeave={handleCardLeave}
               isMobile={isMobile}
+              index={index}
+              className={isMobile ? `transition-opacity duration-300 ${index === activeIndex ? 'opacity-100' : 'opacity-50'}` : ''}
             />
           ))}
         </motion.div>
+
+        {/* Mobile Indicator Dots */}
+        {isMobile && (
+          <div className="flex justify-center gap-3 mt-8">
+            {[0, 1, 2].map((index) => (
+              <motion.button
+                key={index}
+                onClick={() => setActiveIndex(index)}
+                whileTap={{ scale: 0.9 }}
+                className={`h-2.5 rounded-full transition-all duration-300 ${activeIndex === index ? 'bg-gradient-to-r from-purple-400 to-pink-500 w-8' : 'bg-white/30 w-2.5'}`}
+                aria-label={`View testimonial ${index + 1}`}
+              />
+            ))}
+          </div>
+        )}
 
         {/* View More Button */}
         <motion.div
@@ -393,7 +474,7 @@ const Testimonials = () => {
           <motion.button
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.98 }}
-            className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl py-3 px-8 text-lg font-medium transition-all duration-300 shadow-lg hover:shadow-glow"
+            className="inline-flex items-center gap-2 bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl py-3 px-8 text-lg font-medium transition-all duration-300 shadow-lg hover:shadow-glow max-w-full"
           >
             View All Testimonials
             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">

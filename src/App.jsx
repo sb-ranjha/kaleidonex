@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
+import { Routes, Route, useLocation } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./ThemeContext.js";
 import { AuthProvider } from "./contexts/AuthContext";
 // import { useAuth } from "./contexts/AuthContext";
@@ -66,11 +67,50 @@ const HomePage = () => (
 
 const App = () => {
   const [isLoading, setIsLoading] = useState(true);
+  const location = useLocation();
+
+  // Page transition variants
+  const pageVariants = {
+    initial: {
+      opacity: 0,
+      y: 20
+    },
+    in: {
+      opacity: 1,
+      y: 0
+    },
+    out: {
+      opacity: 0,
+      y: -20
+    }
+  };
+
+  const pageTransition = {
+    type: "tween",
+    ease: "anticipate",
+    duration: 0.5
+  };
 
   useEffect(() => {
+    // Preload critical assets
+    const preloadAssets = () => {
+      const criticalAssets = [
+        '/logo.png',
+        '/assets/hero-bg.jpg'
+      ];
+
+      criticalAssets.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    };
+
+    preloadAssets();
+
+    // Set a minimum loading time to ensure the animation completes
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 1000);
+    }, 2000); // Match the 2 seconds in LoadingSpinner.jsx
 
     return () => clearTimeout(timer);
   }, []);
@@ -82,7 +122,7 @@ const App = () => {
   return (
     <AuthProvider>
       <ThemeProvider>
-        <div className="flex flex-col min-h-screen dark:bg-gray-900 dark:text-white transition-colors duration-300">
+        <div className="flex flex-col min-h-screen dark:bg-gray-900 dark:text-white transition-colors duration-300 overflow-x-hidden">
           <Toaster
             position="top-center"
             toastOptions={{
@@ -104,44 +144,56 @@ const App = () => {
           <main className="flex-grow">
             <ScrollToTop />
             <BackToTop />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/courses" element={<CoursesPage />} />
-              <Route path="/services" element={<Services />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/blog" element={<Blog />} />
-              {/* Course Detail Pages */}
-              <Route path="/courses/web-development" element={<WebDevelopment />}/>
-              <Route path="/courses/data-science" element={<DataScience />} />
-              <Route path="/courses/cloud-computing" element={<CloudComputing />}/>
-              <Route path="/courses/java-development" element={<JavaDevelopment />} />
-              <Route path="/courses/generative-ai" element={<GenerativeAI />} />
-              <Route path="/courses/android-development" element={<AndroidDevelopment/>} />
-              <Route path="/courses/python-development" element={<PythonDevelopment/>} />
-              <Route path="/courses/cpp-development" element={<CppDevelopment/>} />
-              <Route path="/courses/machine-learning" element={<MachineLearning/>} />
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={location.pathname}
+                initial="initial"
+                animate="in"
+                exit="out"
+                variants={pageVariants}
+                transition={pageTransition}
+                className="w-full h-full"
+              >
+                <Routes location={location}>
+                  <Route path="/" element={<HomePage />} />
+                  <Route path="/courses" element={<CoursesPage />} />
+                  <Route path="/services" element={<Services />} />
+                  <Route path="/about" element={<About />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/privacy" element={<Privacy />} />
+                  <Route path="/blog" element={<Blog />} />
+                  {/* Course Detail Pages */}
+                  <Route path="/courses/web-development" element={<WebDevelopment />}/>
+                  <Route path="/courses/data-science" element={<DataScience />} />
+                  <Route path="/courses/cloud-computing" element={<CloudComputing />}/>
+                  <Route path="/courses/java-development" element={<JavaDevelopment />} />
+                  <Route path="/courses/generative-ai" element={<GenerativeAI />} />
+                  <Route path="/courses/android-development" element={<AndroidDevelopment/>} />
+                  <Route path="/courses/python-development" element={<PythonDevelopment/>} />
+                  <Route path="/courses/cpp-development" element={<CppDevelopment/>} />
+                  <Route path="/courses/machine-learning" element={<MachineLearning/>} />
 
-              {/* Service Pages */}
-              <Route path="/services/web-development" element={<WebDevService />} />
-              <Route path="/services/app-development" element={<AppDevService />} />
+                  {/* Service Pages */}
+                  <Route path="/services/web-development" element={<WebDevService />} />
+                  <Route path="/services/app-development" element={<AppDevService />} />
 
-              {/* Certificate Verification Routes */}
-              <Route path="/verify" element={<CertificateVerification />} />
-              <Route
-                path="/verify/:certificateId"
-                element={<CertificateVerification />}
-              />
+                  {/* Certificate Verification Routes */}
+                  <Route path="/verify" element={<CertificateVerification />} />
+                  <Route
+                    path="/verify/:certificateId"
+                    element={<CertificateVerification />}
+                  />
 
-              {/* Auth Routes */}
-              <Route path="/signin" element={<SignIn />} />
-              <Route path="/signup" element={<SignUp />} />
-              <Route path="/forgot-password" element={<ForgotPassword />} />
+                  {/* Auth Routes */}
+                  <Route path="/signin" element={<SignIn />} />
+                  <Route path="/signup" element={<SignUp />} />
+                  <Route path="/forgot-password" element={<ForgotPassword />} />
 
-              {/* 404 Page - This should be the last route */}
-              <Route path="*" element={<NotFound />} />
+                  {/* 404 Page - This should be the last route */}
+                  <Route path="*" element={<NotFound />} />
             </Routes>
+              </motion.div>
+            </AnimatePresence>
           </main>
           <Footer />
         </div>

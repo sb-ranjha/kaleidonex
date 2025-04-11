@@ -120,7 +120,7 @@ const CourseCard = ({ title, imageUrl, loading = "lazy" }) => { // Default to la
       whileHover={{ y: -8 }}
       className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-xl overflow-hidden flex flex-col shadow-lg hover:shadow-glow transition-all duration-300"
     >
-      <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden">
+      <div className="relative h-52 sm:h-48 md:h-56 lg:h-64 overflow-hidden">
         <img
           src={imageUrl}
           alt={title}
@@ -142,7 +142,7 @@ const CourseCard = ({ title, imageUrl, loading = "lazy" }) => { // Default to la
           <div className="space-y-3 mb-6">
             {getKeyPoints(title).map((point, index) => (
               <div key={index} className="flex items-center gap-3 group">
-                <div className="flex-shrink-0 w-8 h-8 rounded-full bg-purple-900/30 flex items-center justify-center">
+                <div className="flex-shrink-0 w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-purple-900/30 flex items-center justify-center">
                   {getIconForPoint(point, index)}
                 </div>
                 <span className="text-gray-200 text-sm md:text-base group-hover:text-white transition-colors duration-200">{point}</span>
@@ -156,10 +156,10 @@ const CourseCard = ({ title, imageUrl, loading = "lazy" }) => { // Default to la
           whileHover={{ scale: 1.03 }}
           whileTap={{ scale: 0.98 }}
           className="mt-auto bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-lg py-3 px-6
-                   flex items-center justify-between transition-all duration-300 shadow-md hover:shadow-lg"
+                   flex items-center justify-between transition-all duration-300 shadow-md hover:shadow-lg w-full sm:w-auto"
         >
           <span className="text-sm md:text-base font-medium">Program Details</span>
-          <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform duration-300" />
+          <ArrowRightIcon className="w-5 h-5 ml-2 group-hover:translate-x-1 transition-transform duration-300" />
         </motion.button>
       </div>
     </motion.div>
@@ -179,19 +179,19 @@ const Courses = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary to-primary-dark py-16 md:py-20 lg:py-24 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+    <div className="min-h-screen bg-gradient-to-b from-primary to-primary-dark py-12 sm:py-16 md:py-20 lg:py-24 relative overflow-hidden">
+      {/* Background Elements - Hidden on small mobile, visible on larger screens */}
+      <div className="hidden sm:block absolute top-0 right-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+      <div className="hidden sm:block absolute bottom-0 left-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
 
-      {/* Floating Elements */}
+      {/* Floating Elements - Hidden on small mobile, visible on larger screens */}
       <motion.div
-        className="absolute top-40 left-20 w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg blur-sm"
+        className="hidden sm:block absolute top-40 left-20 w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg blur-sm"
         animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-40 right-20 w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-sm"
+        className="hidden sm:block absolute bottom-40 right-20 w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-sm"
         animate={{ y: [0, 20, 0], rotate: [0, -10, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
       />
@@ -202,18 +202,18 @@ const Courses = () => {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8 }}
           viewport={{ once: true }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
-          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-4 py-2 rounded-full mb-6">
-            <AcademicCapIcon className="h-5 w-5 text-purple-400" />
-            <span className="text-purple-300 text-sm font-medium">Educational Programs</span>
+          <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm px-3 py-1.5 sm:px-4 sm:py-2 rounded-full mb-4 sm:mb-6">
+            <AcademicCapIcon className="h-4 w-4 sm:h-5 sm:w-5 text-purple-400" />
+            <span className="text-purple-300 text-xs sm:text-sm font-medium">Educational Programs</span>
           </div>
 
-          <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-6 text-shadow-glow">
+          <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 text-shadow-glow">
             Our <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-pink-500">Programs</span>
           </h1>
 
-          <p className="text-lg text-gray-300 max-w-2xl mx-auto">
+          <p className="text-base sm:text-lg text-gray-300 max-w-2xl mx-auto">
             Comprehensive courses designed to help you master the skills needed for today's tech industry
           </p>
         </motion.div>
@@ -223,7 +223,7 @@ const Courses = () => {
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10"
+          className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-8 lg:gap-10"
         >
           {allCourses.map((course) => (
             <CourseCard
@@ -233,6 +233,20 @@ const Courses = () => {
             />
           ))}
         </motion.div>
+
+        {/* Mobile-friendly back to top button */}
+        <div className="mt-12 sm:mt-16 flex justify-center">
+          <motion.button
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            className="bg-white/10 backdrop-blur-sm rounded-full p-3 sm:p-4 shadow-md hover:shadow-glow transition-all duration-300"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 sm:h-6 sm:w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 10l7-7m0 0l7 7m-7-7v18" />
+            </svg>
+          </motion.button>
+        </div>
       </div>
     </div>
   );

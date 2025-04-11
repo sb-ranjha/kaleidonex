@@ -1,188 +1,130 @@
 import React, { useState, useEffect } from 'react';
 
 const LoadingSpinner = () => {
-  const [loadingText, setLoadingText] = useState('');
-  const [dotCount, setDotCount] = useState(0);
-  const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
-  
-  const loadingMessages = [
-    "Initializing Systems",
-    "Configuring Future Technologies",
-    "Loading Innovation Hub",
-    "Preparing Digital Workspace",
-    "Synchronizing Advanced Features",
-    "Launching Kaleidonex Experience"
-  ];
 
   useEffect(() => {
     const startTime = Date.now();
-    let currentIndex = 0;
-    let currentMessageIndex = 0;
-    const typingSpeed = 50;
-    const messageDelay = 800; // Reduced message delay
-    const totalLoadTime = 5000; // Changed to 5 seconds
-    const progressUpdateInterval = 16;
-    
-    // Progress bar fills quickly but loading continues
+    const totalLoadTime = 2000; // Reduced to 2 seconds for faster loading
+    const progressUpdateInterval = 10; // More frequent updates for smoother animation
+
+    // Preload key assets
+    const preloadImages = () => {
+      const imagesToPreload = [
+        '/logo.png',
+        '/assets/hero-bg.jpg'
+      ];
+
+      imagesToPreload.forEach(src => {
+        const img = new Image();
+        img.src = src;
+      });
+    };
+
+    preloadImages();
+
+    // Progress bar fills smoothly with slight acceleration at the beginning
     const progressInterval = setInterval(() => {
       const elapsedTime = Date.now() - startTime;
-      // Faster progress bar fill (2x speed)
-      const progress = Math.min((elapsedTime / (totalLoadTime / 2)), 1);
-      const easedProgress = Math.min(progress * (2 - progress) * 100, 100);
-      setProgress(easedProgress);
-      
+      // Use easeOutQuad for smoother progress feeling
+      const rawProgress = Math.min(elapsedTime / totalLoadTime, 1);
+      const progress = Math.min(100, rawProgress * (2 - rawProgress) * 100);
+
+      setProgress(progress);
+
       if (elapsedTime >= totalLoadTime) {
         clearInterval(progressInterval);
         setProgress(100);
       }
     }, progressUpdateInterval);
 
-    const typingInterval = setInterval(() => {
-      const currentMessage = loadingMessages[currentMessageIndex];
-      
-      if (currentIndex <= currentMessage.length) {
-        setLoadingText(currentMessage.slice(0, currentIndex));
-        currentIndex++;
-      } else {
-        setTimeout(() => {
-          if (Date.now() - startTime < totalLoadTime) {
-            currentIndex = 0;
-            currentMessageIndex = (currentMessageIndex + 1) % loadingMessages.length;
-            setMessageIndex(currentMessageIndex);
-          }
-        }, messageDelay);
-      }
-    }, typingSpeed);
-
-    const dotsInterval = setInterval(() => {
-      setDotCount((prev) => (prev + 1) % 4);
-    }, 300); // Faster dots animation
-
-    // Ensure minimum 5 second loading time
-    const minLoadingTimer = setTimeout(() => {
-      clearInterval(progressInterval);
-      clearInterval(typingInterval);
-      clearInterval(dotsInterval);
-      setProgress(100);
-      setLoadingText(loadingMessages[loadingMessages.length - 1]);
-    }, totalLoadTime);
-
     return () => {
       clearInterval(progressInterval);
-      clearInterval(typingInterval);
-      clearInterval(dotsInterval);
-      clearTimeout(minLoadingTimer);
     };
   }, []);
 
   return (
-    <div className="min-h-screen bg-primary-dark flex flex-col items-center justify-center relative overflow-hidden px-4">
-      {/* Background gradient effects */}
-      <div className="absolute inset-0 bg-gradient-to-br from-primary-light via-primary to-primary-dark animate-gradient"></div>
-      
-      {/* Multiple glowing orbs with slower animation */}
-      <div className="absolute w-64 sm:w-96 h-64 sm:h-96 bg-purple-600/10 rounded-full filter blur-3xl animate-pulse-slow"></div>
-      <div className="absolute w-56 sm:w-80 h-56 sm:h-80 bg-blue-600/10 rounded-full filter blur-3xl animate-pulse-slow delay-700 -translate-x-16 sm:-translate-x-32"></div>
-      <div className="absolute w-48 sm:w-72 h-48 sm:h-72 bg-indigo-600/10 rounded-full filter blur-3xl animate-pulse-slow delay-1000 translate-x-16 sm:translate-x-32"></div>
-      
-      {/* Floating particles */}
+    <div className="min-h-screen bg-primary flex flex-col items-center justify-center relative overflow-hidden">
+      {/* Enhanced gradient background */}
+      <div className="absolute inset-0 bg-gradient-to-b from-purple-900 via-primary-dark to-primary"></div>
+
+      {/* Enhanced animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
-        {[...Array(20)].map((_, i) => (
-          <div
-            key={i}
-            className="absolute w-1.5 sm:w-2 h-1.5 sm:h-2 bg-white/10 rounded-full animate-float"
-            style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
-              animationDelay: `${Math.random() * 5}s`,
-              animationDuration: `${5 + Math.random() * 3}s`
-            }}
-          ></div>
-        ))}
+        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl animate-pulse-slow"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-indigo-600/20 rounded-full filter blur-3xl animate-pulse-slow delay-700"></div>
+        <div className="absolute top-1/2 right-1/3 w-64 h-64 bg-violet-500/15 rounded-full filter blur-3xl animate-pulse-slow delay-300"></div>
+        <div className="absolute bottom-1/3 left-1/3 w-72 h-72 bg-fuchsia-500/15 rounded-full filter blur-3xl animate-pulse-slow delay-500"></div>
       </div>
-      
+
       {/* Main content */}
-      <div className="relative z-10 flex flex-col items-center w-full max-w-sm sm:max-w-md">
-        {/* Company name with enhanced glowing effect */}
-        <h1 className="text-4xl sm:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-blue-400 to-indigo-400 mb-8 sm:mb-12 animate-glow tracking-wider text-center">
-          Kaleidonex
-        </h1>
-        
-        {/* Progress bar with smoother animation */}
-        <div className="w-full sm:w-80 h-1.5 bg-white/10 rounded-full mb-6 sm:mb-8 overflow-hidden">
-          <div 
-            className="h-full bg-gradient-to-r from-purple-500 via-blue-500 to-indigo-500 transition-all duration-100 ease-out"
+      <div className="relative z-10 flex flex-col items-center justify-center w-full max-w-xs sm:max-w-sm">
+        {/* Logo */}
+        <div className="mb-8 flex items-center justify-center">
+          <div className="relative">
+            <div className="absolute inset-0 bg-purple-500/30 rounded-full filter blur-md animate-pulse-slow"></div>
+            <h1 className="text-6xl sm:text-7xl font-bold text-white relative z-10">
+              <span className="bg-clip-text text-transparent bg-gradient-to-r from-purple-400 to-indigo-500">K</span>
+            </h1>
+          </div>
+        </div>
+
+        {/* Modern progress bar */}
+        <div className="w-full h-2 bg-white/10 rounded-full mb-6 overflow-hidden shadow-inner">
+          <div
+            className="h-full bg-gradient-to-r from-purple-500 via-fuchsia-500 to-indigo-500 transition-all duration-100 shadow-lg"
             style={{ width: `${progress}%` }}
           ></div>
         </div>
-        
-        {/* Animated loading text */}
-        <div className="mt-4 text-center w-full">
-          <p className="text-lg sm:text-xl text-purple-300/90 font-light tracking-wider min-h-[2em] px-2">
-            {loadingText}
-            <span className="inline-block w-4">
-              {'.'.repeat(dotCount)}
-            </span>
-          </p>
-          <p className="text-purple-300/50 text-xs sm:text-sm mt-2 animate-pulse-slow px-2">
-            Please wait while we prepare your experience
-          </p>
-        </div>
+
+        {/* Company name */}
+        <h2 className="text-3xl font-bold text-white mb-2 tracking-wide bg-clip-text text-transparent bg-gradient-to-r from-purple-200 to-indigo-200">
+          Kaleidonex
+        </h2>
+
+        {/* Enhanced loading text */}
+        <p className="text-purple-200/90 text-sm animate-pulse flex items-center">
+          Loading your experience
+          <span className="ml-1 flex space-x-1">
+            <span className="animate-bounce delay-100">.</span>
+            <span className="animate-bounce delay-200">.</span>
+            <span className="animate-bounce delay-300">.</span>
+          </span>
+        </p>
       </div>
 
       <style jsx>{`
-        @keyframes glow {
-          0%, 100% { 
-            text-shadow: 
-              0 0 20px rgba(167, 139, 250, 0.5),
-              0 0 40px rgba(167, 139, 250, 0.3),
-              0 0 60px rgba(167, 139, 250, 0.1);
-          }
-          50% { 
-            text-shadow: 
-              0 0 30px rgba(167, 139, 250, 0.8),
-              0 0 50px rgba(167, 139, 250, 0.5),
-              0 0 70px rgba(167, 139, 250, 0.3);
-          }
-        }
-        @keyframes gradient {
-          0%, 100% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-        }
-        @keyframes float {
-          0%, 100% { 
-            transform: translateY(0) translateX(0);
-            opacity: 0;
-          }
-          50% { 
-            transform: translateY(-100px) translateX(20px);
-            opacity: 0.5;
-          }
-          100% { 
-            transform: translateY(-200px) translateX(0);
-            opacity: 0;
-          }
-        }
-        .animate-glow {
-          animation: glow 3s ease-in-out infinite;
-        }
-        .animate-gradient {
-          background-size: 400% 400%;
-          animation: gradient 15s ease infinite;
+        @keyframes pulse-slow {
+          0%, 100% { opacity: 0.3; transform: scale(1); }
+          50% { opacity: 0.6; transform: scale(1.05); }
         }
         .animate-pulse-slow {
-          animation: pulse 3s ease-in-out infinite;
+          animation: pulse-slow 4s ease-in-out infinite;
+        }
+        .delay-100 {
+          animation-delay: 100ms;
+        }
+        .delay-200 {
+          animation-delay: 200ms;
+        }
+        .delay-300 {
+          animation-delay: 300ms;
+        }
+        .delay-500 {
+          animation-delay: 500ms;
         }
         .delay-700 {
           animation-delay: 700ms;
         }
-        .delay-1000 {
-          animation-delay: 1000ms;
+        @keyframes bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-5px); }
+        }
+        .animate-bounce {
+          animation: bounce 0.8s infinite;
         }
       `}</style>
     </div>
   );
 };
 
-export default LoadingSpinner; 
+export default LoadingSpinner;

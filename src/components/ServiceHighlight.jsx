@@ -55,10 +55,32 @@ const ServiceHighlight = () => {
   };
 
   return (
-    <div className="w-full bg-primary dark:bg-gray-900 py-20 sm:py-28 relative overflow-hidden">
+    <div className="w-full bg-gradient-to-b from-primary to-primary-dark py-20 sm:py-28 relative overflow-hidden">
       {/* Background decorative elements */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-purple-600/20 to-pink-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-blue-600/20 to-purple-500/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+
+      {/* Animated scroll indicator */}
+      <motion.div
+        className="absolute left-1/2 bottom-8 transform -translate-x-1/2 flex flex-col items-center opacity-70 hover:opacity-100 transition-opacity duration-300 cursor-pointer z-10"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 2, duration: 0.8 }}
+        onClick={() => window.scrollTo({ top: window.innerHeight, behavior: 'smooth' })}
+      >
+        <span className="text-white text-sm mb-2">Scroll Down</span>
+        <motion.div
+          className="w-6 h-10 border-2 border-white rounded-full flex justify-center p-1"
+          animate={{ y: [0, 5, 0] }}
+          transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <motion.div
+            className="w-1.5 h-3 bg-white rounded-full"
+            animate={{ y: [0, 5, 0] }}
+            transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+          />
+        </motion.div>
+      </motion.div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <motion.div
@@ -88,10 +110,16 @@ const ServiceHighlight = () => {
             <motion.div
               key={index}
               variants={itemVariants}
-              className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 sm:p-10 hover:bg-white/10 transition-all duration-300 border border-white/10 shadow-lg hover:shadow-glow group"
-              whileHover={{ y: -10 }}
+              className="bg-white/5 backdrop-blur-sm rounded-2xl p-8 sm:p-10 hover:bg-white/10 transition-all duration-300 border border-white/10 shadow-lg hover:shadow-glow group overflow-hidden"
+              whileHover={{ y: -10, boxShadow: "0 0 20px rgba(124, 58, 237, 0.5), 0 0 40px rgba(124, 58, 237, 0.2)" }}
             >
-              <div className="flex items-start gap-6 mb-8">
+              {/* Background gradient effect */}
+              <div className="absolute inset-0 bg-gradient-to-br from-purple-600/5 to-pink-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+
+              {/* Animated corner accent */}
+              <div className="absolute -top-1 -right-1 w-32 h-32 bg-gradient-to-br from-purple-500/20 to-pink-500/20 rounded-bl-full transform rotate-12 opacity-0 group-hover:opacity-100 transition-all duration-300"></div>
+
+              <div className="flex items-start gap-6 mb-8 relative z-10">
                 <div className="p-4 bg-gradient-to-br from-purple-600 to-purple-800 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-300">
                   {service.icon}
                 </div>
@@ -105,18 +133,21 @@ const ServiceHighlight = () => {
                 </div>
               </div>
 
-              <div className="space-y-4 mb-10">
+              <div className="space-y-4 mb-10 relative z-10">
                 {service.features.map((feature, index) => (
                   <motion.div
                     key={index}
-                    className="flex items-center gap-3"
+                    className="flex items-center gap-3 group/item"
                     initial={{ opacity: 0, x: -10 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     transition={{ delay: index * 0.1 + 0.2 }}
                     viewport={{ once: true }}
+                    whileHover={{ x: 5 }}
                   >
-                    <div className="w-3 h-3 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
-                    <span className="text-gray-300 text-lg">{feature}</span>
+                    <div className="w-4 h-4 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center shadow-md group-hover/item:scale-125 transition-transform duration-300">
+                      <div className="w-1 h-1 bg-white rounded-full opacity-70"></div>
+                    </div>
+                    <span className="text-gray-300 text-lg group-hover/item:text-white transition-colors duration-300">{feature}</span>
                   </motion.div>
                 ))}
               </div>

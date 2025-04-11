@@ -76,7 +76,7 @@ const Header = () => {
   };
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 bg-primary dark:bg-gray-900 border-b border-white/10 shadow-lg">
+    <header className="fixed top-0 left-0 right-0 z-50 bg-primary dark:bg-gray-900 border-b border-white/10 shadow-lg overflow-x-hidden">
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={menuRef}>
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
@@ -211,7 +211,7 @@ const Header = () => {
 
         {/* Mobile Navigation */}
         {isMenuOpen && (
-          <div className="md:hidden py-6 bg-primary dark:bg-gray-900 fixed inset-0 z-50 overflow-y-auto">
+          <div className="md:hidden py-6 bg-primary dark:bg-gray-900 fixed inset-0 z-50 overflow-y-auto overflow-x-hidden">
             {/* Mobile Header with Logo and Close */}
             <div className="px-6 flex items-center justify-between mb-8">
               <div className="bg-gradient-to-r from-white to-purple-100 rounded-xl px-4 py-2 shadow-md">
@@ -226,7 +226,7 @@ const Header = () => {
             </div>
 
             {/* Navigation Links */}
-            <div className="px-6 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto">
+            <div className="px-6 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto overflow-x-hidden">
               {/* Main Navigation Items */}
               {navigation.map((item, index) => (
                 <div key={item.name} className="py-2">
@@ -255,7 +255,7 @@ const Header = () => {
 
                       {/* Mobile Dropdown Items */}
                       {activeDropdown === index && (
-                        <div className="ml-10 space-y-3 bg-white/5 rounded-lg p-4 mt-2">
+                        <div className="ml-10 space-y-3 bg-white/5 rounded-lg p-4 mt-2 max-w-full">
                           {item.dropdown.map((dropdownItem) => (
                             <Link
                               key={dropdownItem.name}
@@ -313,7 +313,7 @@ const Header = () => {
             </div>
 
             {/* Sign In Button */}
-            <div className="fixed bottom-8 left-6 right-6">
+            <div className="fixed bottom-8 left-6 right-6 max-w-[calc(100%-48px)]">
               <Link
                 to="/signin"
                 className="flex items-center justify-center gap-2 bg-gradient-to-r from-white to-purple-100 text-primary rounded-xl py-3 px-6 w-full text-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300"

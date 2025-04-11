@@ -88,20 +88,25 @@ const Contact = () => {
 
   return (
     <section className="min-h-screen bg-gradient-to-b from-primary to-primary-dark pt-32 sm:pt-20 pb-20 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
-      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-purple-500/10 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
+      {/* Enhanced Background Elements */}
+      <div className="absolute top-0 right-0 w-1/3 h-1/3 bg-gradient-to-br from-purple-600/20 to-pink-500/20 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3"></div>
+      <div className="absolute bottom-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-blue-600/20 to-purple-500/20 rounded-full blur-3xl translate-y-1/2 -translate-x-1/3"></div>
 
       {/* Floating Elements */}
       <motion.div
-        className="absolute top-40 left-20 w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg blur-sm"
+        className="absolute top-40 left-20 w-16 h-16 bg-gradient-to-r from-purple-500/20 to-pink-500/20 rounded-lg blur-sm hidden md:block"
         animate={{ y: [0, -20, 0], rotate: [0, 10, 0] }}
         transition={{ duration: 8, repeat: Infinity, ease: "easeInOut" }}
       />
       <motion.div
-        className="absolute bottom-40 right-20 w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-sm"
+        className="absolute bottom-40 right-20 w-20 h-20 bg-gradient-to-r from-blue-500/20 to-purple-500/20 rounded-full blur-sm hidden md:block"
         animate={{ y: [0, 20, 0], rotate: [0, -10, 0] }}
         transition={{ duration: 10, repeat: Infinity, ease: "easeInOut" }}
+      />
+      <motion.div
+        className="absolute top-1/3 right-1/3 w-12 h-12 bg-gradient-to-r from-indigo-500/20 to-purple-500/20 rounded-lg blur-sm hidden md:block"
+        animate={{ y: [0, -15, 0], rotate: [0, -5, 0] }}
+        transition={{ duration: 7, repeat: Infinity, ease: "easeInOut" }}
       />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
@@ -153,7 +158,7 @@ const Contact = () => {
                     name="name"
                     value={formData.name}
                     onChange={handleChange}
-                    className="w-full px-4 py-3 rounded-lg bg-white/10 border border-white/20 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-200"
+                    className="w-full px-4 py-3 rounded-lg bg-white/5 backdrop-blur-sm border border-white/10 text-white placeholder-gray-400 focus:ring-2 focus:ring-purple-500 focus:border-transparent transition duration-300 hover:bg-white/10 shadow-inner"
                     placeholder="John Doe"
                     required
                   />
@@ -245,24 +250,42 @@ const Contact = () => {
               <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                 {/* Address */}
                 <motion.div
-                  whileHover={{ y: -5 }}
-                  className="text-center bg-white/5 p-6 rounded-xl border border-white/10"
+                  whileHover={{ y: -5, boxShadow: "0 0 15px rgba(124, 58, 237, 0.5), 0 0 30px rgba(124, 58, 237, 0.2)" }}
+                  className="text-center bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 shadow-lg"
                 >
-                  <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mb-4 shadow-lg">
-                    <MapPinIcon className="h-6 w-6 text-white" />
-                  </div>
+                  <motion.div
+                    className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mb-4 shadow-lg relative overflow-hidden group-hover:shadow-glow transition-shadow duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-purple-400/30 to-pink-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                    />
+                    <MapPinIcon className="h-6 w-6 text-white relative z-10" />
+                  </motion.div>
                   <h3 className="font-medium text-white text-lg mb-2">Visit Us</h3>
                   <p className="text-gray-300">Bihar, India</p>
                 </motion.div>
 
                 {/* Email */}
                 <motion.div
-                  whileHover={{ y: -5 }}
-                  className="text-center bg-white/5 p-6 rounded-xl border border-white/10"
+                  whileHover={{ y: -5, boxShadow: "0 0 15px rgba(124, 58, 237, 0.5), 0 0 30px rgba(124, 58, 237, 0.2)" }}
+                  className="text-center bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 shadow-lg"
                 >
-                  <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mb-4 shadow-lg">
-                    <EnvelopeIcon className="h-6 w-6 text-white" />
-                  </div>
+                  <motion.div
+                    className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mb-4 shadow-lg relative overflow-hidden group-hover:shadow-glow transition-shadow duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-purple-400/30 to-pink-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                    />
+                    <EnvelopeIcon className="h-6 w-6 text-white relative z-10" />
+                  </motion.div>
                   <h3 className="font-medium text-white text-lg mb-2">Email Us</h3>
                   <a href="mailto:contact@kaleidonex.org" className="text-gray-300 hover:text-purple-400 transition-colors duration-300">
                     contact@kaleidonex.org
@@ -271,12 +294,21 @@ const Contact = () => {
 
                 {/* Phone */}
                 <motion.div
-                  whileHover={{ y: -5 }}
-                  className="text-center bg-white/5 p-6 rounded-xl border border-white/10"
+                  whileHover={{ y: -5, boxShadow: "0 0 15px rgba(124, 58, 237, 0.5), 0 0 30px rgba(124, 58, 237, 0.2)" }}
+                  className="text-center bg-white/5 backdrop-blur-sm p-6 rounded-xl border border-white/10 hover:bg-white/10 transition-all duration-300 shadow-lg"
                 >
-                  <div className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mb-4 shadow-lg">
-                    <PhoneIcon className="h-6 w-6 text-white" />
-                  </div>
+                  <motion.div
+                    className="inline-flex items-center justify-center p-3 bg-gradient-to-br from-purple-600 to-purple-800 rounded-full mb-4 shadow-lg relative overflow-hidden group-hover:shadow-glow transition-shadow duration-300"
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.95 }}
+                  >
+                    <motion.div
+                      className="absolute inset-0 bg-gradient-to-r from-purple-400/30 to-pink-500/30 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                      animate={{ rotate: [0, 360] }}
+                      transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
+                    />
+                    <PhoneIcon className="h-6 w-6 text-white relative z-10" />
+                  </motion.div>
                   <h3 className="font-medium text-white text-lg mb-2">Call Us</h3>
                   <a href="tel:+917742091419" className="text-gray-300 hover:text-purple-400 transition-colors duration-300">
                     +91 7742091419
