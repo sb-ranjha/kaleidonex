@@ -95,8 +95,8 @@ const App = () => {
     // Preload critical assets
     const preloadAssets = () => {
       const criticalAssets = [
-        '/logo.png'
-        // Add other assets here if needed
+        '/logo.png',
+        '/assets/hero-bg.jpg'
       ];
 
       criticalAssets.forEach(src => {

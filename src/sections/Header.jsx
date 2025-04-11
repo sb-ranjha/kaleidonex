@@ -2,13 +2,8 @@ import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import { ThemeContext } from '../ThemeContext';
-import { motion, AnimatePresence } from 'framer-motion';
+import { Bars3Icon, XMarkIcon, ChevronDownIcon, SunIcon, MoonIcon } from '@heroicons/react/24/outline';
 import {
-  Bars3Icon,
-  XMarkIcon,
-  ChevronDownIcon,
-  SunIcon,
-  MoonIcon,
   HomeIcon,
   AcademicCapIcon,
   InformationCircleIcon,
@@ -25,7 +20,6 @@ import {
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState(null);
-  const [isScrolled, setIsScrolled] = useState(false);
   const menuRef = useRef();
   const { currentUser, logout } = useAuth();
   const { isDarkMode, toggleDarkMode } = useContext(ThemeContext);
@@ -66,21 +60,8 @@ const Header = () => {
       }
     };
 
-    const handleScroll = () => {
-      if (window.scrollY > 10) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
-    };
-
     document.addEventListener('mousedown', handleClickOutside);
-    window.addEventListener('scroll', handleScroll);
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
   const handleDropdownToggle = (index) => {
@@ -95,47 +76,29 @@ const Header = () => {
   };
 
   return (
-    <header
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-        isScrolled
-          ? 'bg-primary shadow-lg'
-          : 'bg-primary/80 backdrop-blur-sm'
-      }`}
-    >
-
-      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10" ref={menuRef}>
+    <header className="fixed top-0 left-0 right-0 z-50 bg-primary dark:bg-gray-900 border-b border-white/10 shadow-lg overflow-x-hidden">
+      <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8" ref={menuRef}>
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
-          <motion.div
-            className="flex-shrink-0"
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
+          <div className="flex-shrink-0">
             <Link to="/" className="flex items-center">
-              <div className="bg-white rounded-xl px-5 py-2.5 shadow-lg transform hover:scale-105 transition-all duration-300 hover:shadow-purple-500/20">
+              <div className="bg-gradient-to-r from-white to-purple-100 rounded-lg px-4 py-2 shadow-md transform hover:scale-105 transition-transform duration-300">
                 <span className="text-primary text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-700">KaleidoNex</span>
               </div>
             </Link>
-          </motion.div>
+          </div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex md:items-center md:space-x-1">
+          <div className="hidden md:flex md:items-center md:space-x-8">
             {navigation.map((item, index) => (
-              <motion.div
-                key={item.name}
-                className="relative group"
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-              >
+              <div key={item.name} className="relative group">
                 {item.dropdown ? (
                   <button
                     onClick={() => handleDropdownToggle(index)}
-                    className={`flex items-center px-4 py-2 rounded-lg text-base transition-all duration-300 ${
+                    className={`flex items-center px-3 py-2 text-lg transition-all duration-300 ${
                       isActivePath(item.href)
-                        ? 'text-white font-medium bg-white/10'
-                        : 'text-gray-300 hover:text-white hover:bg-white/5'
+                        ? 'text-white font-semibold'
+                        : 'text-gray-300 hover:text-white'
                     }`}
                   >
                     <span>{item.name}</span>
@@ -148,10 +111,10 @@ const Header = () => {
                 ) : (
                   <Link
                     to={item.href}
-                    className={`px-4 py-2 rounded-lg text-base transition-all duration-300 block ${
+                    className={`px-3 py-2 text-lg transition-all duration-300 ${
                       isActivePath(item.href)
-                        ? 'text-white font-medium bg-white/10'
-                        : 'text-gray-300 hover:text-white hover:bg-white/5'
+                        ? 'text-white font-semibold'
+                        : 'text-gray-300 hover:text-white'
                     }`}
                   >
                     {item.name}
@@ -159,295 +122,209 @@ const Header = () => {
                 )}
 
                 {/* Dropdown Menu */}
-                <AnimatePresence>
-                  {item.dropdown && activeDropdown === index && (
-                    <motion.div
-                      className="absolute left-0 mt-2 w-64 rounded-xl overflow-hidden z-50"
-                      initial={{ opacity: 0, y: 10, height: 0 }}
-                      animate={{ opacity: 1, y: 0, height: 'auto' }}
-                      exit={{ opacity: 0, y: 10, height: 0 }}
-                      transition={{ duration: 0.3 }}
-                    >
-                      <div className="bg-gray-800/90 backdrop-blur-md border border-gray-700/50 rounded-xl shadow-xl py-2 overflow-hidden">
-                        {item.dropdown.map((dropdownItem, idx) => (
-                          <motion.div
-                            key={dropdownItem.name}
-                            initial={{ opacity: 0, x: -10 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.2, delay: idx * 0.05 }}
-                          >
-                            <Link
-                              to={dropdownItem.href}
-                              className="flex items-center px-4 py-3 text-gray-200 hover:bg-purple-600/20 transition-colors duration-300"
-                              onClick={() => setActiveDropdown(null)}
-                            >
-                              <span className="text-purple-400 mr-3">
-                                {dropdownItem.icon}
-                              </span>
-                              <span>{dropdownItem.name}</span>
-                            </Link>
-                          </motion.div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </motion.div>
+                {item.dropdown && activeDropdown === index && (
+                  <div className="absolute left-0 mt-2 w-64 bg-white dark:bg-gray-800 rounded-lg shadow-xl py-2 z-50 transform transition-all duration-300 ease-in-out">
+                    {item.dropdown.map((dropdownItem) => (
+                      <Link
+                        key={dropdownItem.name}
+                        to={dropdownItem.href}
+                        className="flex items-center px-4 py-3 text-gray-800 dark:text-gray-200 hover:bg-purple-50 dark:hover:bg-gray-700 transition-colors duration-300"
+                        onClick={() => setActiveDropdown(null)}
+                      >
+                        <span className="text-purple-600 dark:text-purple-400 mr-3">
+                          {dropdownItem.icon}
+                        </span>
+                        <span>{dropdownItem.name}</span>
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </div>
             ))}
           </div>
 
           {/* Right Side Buttons */}
-          <div className="hidden md:flex md:items-center md:space-x-3">
+          <div className="hidden md:flex md:items-center md:space-x-4">
             {/* Theme Toggle Button */}
-            <motion.button
+            <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors duration-300"
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors duration-300"
               aria-label="Toggle dark mode"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
             >
               {isDarkMode ? (
                 <SunIcon className="h-5 w-5" />
               ) : (
                 <MoonIcon className="h-5 w-5" />
               )}
-            </motion.button>
+            </button>
 
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.4 }}
+            <Link
+              to="/verify"
+              className="text-white bg-white/10 hover:bg-white/20 px-4 py-2 rounded-lg transition-all duration-300 hover:shadow-glow"
             >
-              <Link
-                to="/verify"
-                className="text-white bg-white/20 hover:bg-white/30 px-4 py-2 rounded-lg transition-all duration-300 hover:shadow-glow inline-block"
+              Verify Certificate
+            </Link>
+            {currentUser ? (
+              <button
+                onClick={() => logout()}
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:shadow-glow"
               >
-                Verify Certificate
+                Sign Out
+              </button>
+            ) : (
+              <Link
+                to="/signin"
+                className="bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:shadow-glow"
+              >
+                Sign In
               </Link>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              {currentUser ? (
-                <button
-                  onClick={() => logout()}
-                  className="bg-white text-primary hover:bg-gray-100 px-5 py-2 rounded-lg transition-all duration-300 hover:shadow-purple-500/30 shadow-lg"
-                >
-                  Sign Out
-                </button>
-              ) : (
-                <Link
-                  to="/signin"
-                  className="bg-white text-primary hover:bg-gray-100 px-5 py-2 rounded-lg transition-all duration-300 hover:shadow-purple-500/30 shadow-lg"
-                >
-                  Sign In
-                </Link>
-              )}
-            </motion.div>
+            )}
           </div>
 
           {/* Mobile menu button */}
           <div className="md:hidden flex items-center space-x-3">
             {/* Theme Toggle Button (Mobile) */}
-            <motion.button
+            <button
               onClick={toggleDarkMode}
-              className="p-2 rounded-lg bg-white/5 hover:bg-white/10 text-white transition-colors duration-300"
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 text-white transition-colors duration-300"
               aria-label="Toggle dark mode"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
             >
               {isDarkMode ? (
                 <SunIcon className="h-5 w-5" />
               ) : (
                 <MoonIcon className="h-5 w-5" />
               )}
-            </motion.button>
+            </button>
 
-            <motion.button
+            <button
               onClick={() => setIsMenuOpen(!isMenuOpen)}
               className="text-gray-300 hover:text-white p-2 rounded-lg bg-white/5 hover:bg-white/10 transition-colors duration-300"
-              whileHover={{ scale: 1.1 }}
-              whileTap={{ scale: 0.95 }}
             >
               {isMenuOpen ? (
                 <XMarkIcon className="h-6 w-6" />
               ) : (
                 <Bars3Icon className="h-6 w-6" />
               )}
-            </motion.button>
+            </button>
           </div>
         </div>
 
         {/* Mobile Navigation */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              className="md:hidden fixed inset-0 z-50 bg-primary overflow-y-auto"
-              initial={{ opacity: 0, x: '100%' }}
-              animate={{ opacity: 1, x: 0 }}
-              exit={{ opacity: 0, x: '100%' }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-            >
-              {/* Mobile Header with Logo and Close */}
-              <div className="px-6 py-6 flex items-center justify-between">
-                <motion.div
-                  className="bg-white rounded-xl px-4 py-2 shadow-lg"
-                  initial={{ opacity: 0, x: -20 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.3, delay: 0.1 }}
-                >
-                  <span className="text-primary text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-700">KaleidoNex</span>
-                </motion.div>
-                <motion.button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-white p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors duration-300"
-                  initial={{ opacity: 0, rotate: -90 }}
-                  animate={{ opacity: 1, rotate: 0 }}
-                  transition={{ duration: 0.3 }}
-                  whileTap={{ scale: 0.9 }}
-                >
-                  <XMarkIcon className="h-6 w-6" />
-                </motion.button>
+        {isMenuOpen && (
+          <div className="md:hidden py-6 bg-primary dark:bg-gray-900 fixed inset-0 z-50 overflow-y-auto overflow-x-hidden">
+            {/* Mobile Header with Logo and Close */}
+            <div className="px-6 flex items-center justify-between mb-8">
+              <div className="bg-gradient-to-r from-white to-purple-100 rounded-xl px-4 py-2 shadow-md">
+                <span className="text-primary text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-purple-700">KaleidoNex</span>
               </div>
-
-              {/* Navigation Links */}
-              <div className="px-6 py-4 space-y-1 max-h-[calc(100vh-180px)] overflow-y-auto">
-                {/* Main Navigation Items */}
-                {navigation.map((item, index) => (
-                  <motion.div
-                    key={item.name}
-                    className="py-1"
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ duration: 0.3, delay: index * 0.1 }}
-                  >
-                    {item.dropdown ? (
-                      <div className="space-y-1">
-                        <button
-                          onClick={() => handleDropdownToggle(index)}
-                          className={`flex items-center justify-between w-full text-white text-lg py-3 px-4 rounded-lg ${
-                            activeDropdown === index ? 'bg-white/10' : 'hover:bg-white/5'
-                          }`}
-                        >
-                          <div className="flex items-center gap-4">
-                            {index === 1 ? (
-                              <WrenchScrewdriverIcon className="h-5 w-5 text-purple-400" />
-                            ) : index === 2 ? (
-                              <AcademicCapIcon className="h-5 w-5 text-purple-400" />
-                            ) : (
-                              <HomeIcon className="h-5 w-5 text-purple-400" />
-                            )}
-                            <span>{item.name}</span>
-                          </div>
-                          <ChevronDownIcon
-                            className={`w-5 h-5 transition-transform duration-300 ${
-                              activeDropdown === index ? 'rotate-180' : ''
-                            }`}
-                          />
-                        </button>
-
-                        {/* Mobile Dropdown Items */}
-                        <AnimatePresence>
-                          {activeDropdown === index && (
-                            <motion.div
-                              className="ml-10 space-y-1 bg-white/5 rounded-lg p-3 mt-1"
-                              initial={{ opacity: 0, height: 0 }}
-                              animate={{ opacity: 1, height: 'auto' }}
-                              exit={{ opacity: 0, height: 0 }}
-                              transition={{ duration: 0.3 }}
-                            >
-                              {item.dropdown.map((dropdownItem, idx) => (
-                                <motion.div
-                                  key={dropdownItem.name}
-                                  initial={{ opacity: 0, x: -10 }}
-                                  animate={{ opacity: 1, x: 0 }}
-                                  transition={{ duration: 0.2, delay: idx * 0.05 }}
-                                >
-                                  <Link
-                                    to={dropdownItem.href}
-                                    className="flex items-center gap-3 text-gray-200 hover:text-white py-2 px-3 rounded-lg hover:bg-white/5"
-                                    onClick={() => setIsMenuOpen(false)}
-                                  >
-                                    <span className="text-purple-400">
-                                      {dropdownItem.icon}
-                                    </span>
-                                    <span>{dropdownItem.name}</span>
-                                  </Link>
-                                </motion.div>
-                              ))}
-                            </motion.div>
-                          )}
-                        </AnimatePresence>
-                      </div>
-                    ) : (
-                      <Link
-                        to={item.href}
-                        className={`flex items-center gap-4 text-white text-lg py-3 px-4 rounded-lg ${
-                          isActivePath(item.href) ? 'bg-white/10' : 'hover:bg-white/5'
-                        }`}
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        {item.name === 'Home' ? (
-                          <HomeIcon className="h-5 w-5 text-purple-400" />
-                        ) : item.name === 'Contact' ? (
-                          <EnvelopeIcon className="h-5 w-5 text-purple-400" />
-                        ) : (
-                          <InformationCircleIcon className="h-5 w-5 text-purple-400" />
-                        )}
-                        <span>{item.name}</span>
-                      </Link>
-                    )}
-                  </motion.div>
-                ))}
-
-                {/* Additional Links */}
-                <motion.div
-                  className="pt-4 border-t border-white/10 mt-4 space-y-1"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ duration: 0.3, delay: 0.5 }}
-                >
-                  <Link
-                    to="/about"
-                    className="flex items-center gap-4 text-white text-lg py-3 px-4 rounded-lg hover:bg-white/5"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <InformationCircleIcon className="h-5 w-5 text-purple-400" />
-                    <span>About</span>
-                  </Link>
-                  <Link
-                    to="/verify"
-                    className="flex items-center gap-4 text-white text-lg py-3 px-4 rounded-lg hover:bg-white/5"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <CertificateIcon className="h-5 w-5 text-purple-400" />
-                    <span>Verify Certificate</span>
-                  </Link>
-                </motion.div>
-              </div>
-
-              {/* Sign In Button */}
-              <motion.div
-                className="fixed bottom-8 left-6 right-6"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: 0.6 }}
+              <button
+                onClick={() => setIsMenuOpen(false)}
+                className="text-white p-2 bg-white/10 rounded-lg hover:bg-white/20 transition-colors duration-300"
               >
+                <XMarkIcon className="h-6 w-6" />
+              </button>
+            </div>
+
+            {/* Navigation Links */}
+            <div className="px-6 space-y-4 max-h-[calc(100vh-180px)] overflow-y-auto overflow-x-hidden">
+              {/* Main Navigation Items */}
+              {navigation.map((item, index) => (
+                <div key={item.name} className="py-2">
+                  {item.dropdown ? (
+                    <div className="space-y-2">
+                      <button
+                        onClick={() => handleDropdownToggle(index)}
+                        className="flex items-center justify-between w-full text-white text-xl py-2"
+                      >
+                        <div className="flex items-center gap-4">
+                          {index === 1 ? (
+                            <WrenchScrewdriverIcon className="h-6 w-6" />
+                          ) : index === 2 ? (
+                            <AcademicCapIcon className="h-6 w-6" />
+                          ) : (
+                            <HomeIcon className="h-6 w-6" />
+                          )}
+                          <span>{item.name}</span>
+                        </div>
+                        <ChevronDownIcon
+                          className={`w-5 h-5 transition-transform duration-300 ${
+                            activeDropdown === index ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+
+                      {/* Mobile Dropdown Items */}
+                      {activeDropdown === index && (
+                        <div className="ml-10 space-y-3 bg-white/5 rounded-lg p-4 mt-2 max-w-full">
+                          {item.dropdown.map((dropdownItem) => (
+                            <Link
+                              key={dropdownItem.name}
+                              to={dropdownItem.href}
+                              className="flex items-center gap-3 text-gray-200 hover:text-white py-2"
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              <span className="text-purple-400">
+                                {dropdownItem.icon}
+                              </span>
+                              <span>{dropdownItem.name}</span>
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      to={item.href}
+                      className="flex items-center gap-4 text-white text-xl py-2"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.name === 'Home' ? (
+                        <HomeIcon className="h-6 w-6" />
+                      ) : item.name === 'Contact' ? (
+                        <EnvelopeIcon className="h-6 w-6" />
+                      ) : (
+                        <InformationCircleIcon className="h-6 w-6" />
+                      )}
+                      <span>{item.name}</span>
+                    </Link>
+                  )}
+                </div>
+              ))}
+
+              {/* Additional Links */}
+              <div className="pt-4 border-t border-white/10 mt-4">
                 <Link
-                  to="/signin"
-                  className="flex items-center justify-center gap-2 bg-white text-primary rounded-xl py-3 px-6 w-full text-lg font-medium shadow-lg hover:shadow-purple-500/30 transition-all duration-300"
+                  to="/about"
+                  className="flex items-center gap-4 text-white text-xl py-2"
                   onClick={() => setIsMenuOpen(false)}
                 >
-                  <ArrowRightOnRectangleIcon className="h-5 w-5" />
-                  <span>Sign In</span>
+                  <InformationCircleIcon className="h-6 w-6" />
+                  <span>About</span>
                 </Link>
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
+                <Link
+                  to="/verify"
+                  className="flex items-center gap-4 text-white text-xl py-2"
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  <CertificateIcon className="h-6 w-6" />
+                  <span>Verify Certificate</span>
+                </Link>
+              </div>
+            </div>
+
+            {/* Sign In Button */}
+            <div className="fixed bottom-8 left-6 right-6 max-w-[calc(100%-48px)]">
+              <Link
+                to="/signin"
+                className="flex items-center justify-center gap-2 bg-gradient-to-r from-white to-purple-100 text-primary rounded-xl py-3 px-6 w-full text-xl font-medium shadow-lg hover:shadow-xl transition-all duration-300"
+                onClick={() => setIsMenuOpen(false)}
+              >
+                <ArrowRightOnRectangleIcon className="h-6 w-6" />
+                <span>Sign In</span>
+              </Link>
+            </div>
+          </div>
+        )}
       </nav>
     </header>
   );

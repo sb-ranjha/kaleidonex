@@ -11,8 +11,8 @@ const LoadingSpinner = () => {
     // Preload key assets
     const preloadImages = () => {
       const imagesToPreload = [
-        '/logo.png'
-        // Add other assets here if needed
+        '/logo.png',
+        '/assets/hero-bg.jpg'
       ];
 
       imagesToPreload.forEach(src => {
