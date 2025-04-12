@@ -222,7 +222,7 @@ const InternshipForm = ({ onClose }) => {
           variants={modalVariants}
         >
           {/* Modal Header with Icon */}
-          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 relative">
+          <div className="bg-gradient-to-r from-purple-600 to-indigo-600 p-6 pt-12 relative">
             <div className="absolute -top-10 left-1/2 transform -translate-x-1/2">
               <div className="w-20 h-20 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center shadow-lg">
                 <svg className="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">

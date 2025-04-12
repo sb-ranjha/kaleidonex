@@ -3,6 +3,7 @@ import { Routes, Route, useLocation } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { ThemeProvider } from "./ThemeContext.js";
 import { AuthProvider } from "./contexts/AuthContext";
+import { HelmetProvider } from 'react-helmet-async';
 // import { useAuth } from "./contexts/AuthContext";
 import Header from "./sections/Header.jsx";
 import Hero from "./sections/Hero.jsx";
@@ -120,8 +121,9 @@ const App = () => {
   }
 
   return (
-    <AuthProvider>
-      <ThemeProvider>
+    <HelmetProvider>
+      <AuthProvider>
+        <ThemeProvider>
         <div className="flex flex-col min-h-screen dark:bg-gray-900 dark:text-white transition-colors duration-300 overflow-x-hidden">
           <Toaster
             position="top-center"
@@ -197,8 +199,9 @@ const App = () => {
           </main>
           <Footer />
         </div>
-      </ThemeProvider>
-    </AuthProvider>
+        </ThemeProvider>
+      </AuthProvider>
+    </HelmetProvider>
   );
 };
 

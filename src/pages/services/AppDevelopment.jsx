@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { 
+import { initAOS } from '../../utils/animation';
+import SEO from '../../components/SEO';
+import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+import {
   DevicePhoneMobileIcon,
   CubeTransparentIcon,
   PaintBrushIcon,
@@ -9,411 +12,269 @@ import {
   BellAlertIcon,
   ArrowRightIcon,
   ArrowLeftIcon,
-  StarIcon as StarIconOutline
+  ShieldCheckIcon,
+  RocketLaunchIcon,
+  CogIcon,
+  UserGroupIcon
 } from '@heroicons/react/24/outline';
-import { StarIcon as StarIconSolid } from '@heroicons/react/24/solid';
+
+// Import shared service components
+import ServiceHero from '../../components/services/ServiceHero';
+import ServiceFeatures from '../../components/services/ServiceFeatures';
+import ServiceTechnologies from '../../components/services/ServiceTechnologies';
+import ServiceTestimonials from '../../components/services/ServiceTestimonials';
+import ServiceProcess from '../../components/services/ServiceProcess';
+import ServiceCTA from '../../components/services/ServiceCTA';
+import ProjectSlider from '../../components/ProjectSlider';
 
 const AppDevelopment = () => {
   const navigate = useNavigate();
+  
+  useEffect(() => {
+    // Initialize AOS animations
+    initAOS();
+    
+    return () => {
+      // Cleanup
+    };
+  }, []);
 
-  const technologies = [
-    { name: 'React Native', icon: '/logos/react-native.svg' },
-    { name: 'Flutter', icon: '/logos/flutter.svg' },
-    { name: 'Swift', icon: '/logos/swift.svg' },
-    { name: 'Kotlin', icon: '/logos/kotlin.svg' },
-    { name: 'Firebase', icon: '/logos/firebase.svg' },
-    { name: 'Android Studio', icon: '/logos/android-studio.svg' },
-  ];
+  // Back button component
+  const BackButton = () => (
+    <button
+      onClick={() => navigate('/services')}
+      className="fixed top-24 left-4 sm:left-8 z-50 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 backdrop-blur-sm transition-all duration-300 group"
+    >
+      <ArrowLeftIcon className="w-6 h-6" />
+      <span className="absolute left-full ml-2 bg-white/10 text-white px-3 py-1 rounded-full text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
+        Back to Services
+      </span>
+    </button>
+  );
 
-  const services = [
-    {
-      icon: <DevicePhoneMobileIcon className="w-8 h-8" />,
-      title: "Native App Development",
-      description: "High-performance native apps for iOS and Android platforms."
-    },
-    {
-      icon: <CubeTransparentIcon className="w-8 h-8" />,
-      title: "Cross-Platform Development",
-      description: "Cost-effective solutions that work seamlessly across platforms."
-    },
-    {
-      icon: <PaintBrushIcon className="w-8 h-8" />,
-      title: "UI/UX Design",
-      description: "Intuitive and engaging user interfaces with modern design principles."
-    },
-    {
-      icon: <CloudArrowUpIcon className="w-8 h-8" />,
-      title: "Cloud Integration",
-      description: "Secure cloud storage and real-time data synchronization."
-    },
-    {
-      icon: <ChartBarIcon className="w-8 h-8" />,
-      title: "Analytics Integration",
-      description: "Track user behavior and app performance metrics."
-    },
-    {
-      icon: <BellAlertIcon className="w-8 h-8" />,
-      title: "Push Notifications",
-      description: "Engage users with timely and relevant notifications."
-    }
-  ];
-
+  // App Development Features
   const features = [
     {
-      title: "Custom Features",
+      icon: <DevicePhoneMobileIcon className="w-8 h-8 text-purple-400" />,
+      title: "Native App Development",
+      description: "High-performance native applications for iOS and Android platforms with platform-specific optimizations.",
       items: [
-        "User Authentication",
-        "Real-time Updates",
-        "Offline Mode",
-        "Social Integration",
-        "Payment Gateway",
-        "Maps & Location"
+        "iOS Development with Swift",
+        "Android Development with Kotlin",
+        "Hardware Integration",
+        "App Store Optimization"
       ]
     },
     {
-      title: "Security Features",
+      icon: <CubeTransparentIcon className="w-8 h-8 text-purple-400" />,
+      title: "Cross-Platform Solutions",
+      description: "Cost-effective cross-platform applications that work seamlessly across multiple devices.",
+      items: [
+        "React Native Development",
+        "Flutter Applications",
+        "Shared Codebase",
+        "Consistent UI/UX"
+      ]
+    },
+    {
+      icon: <PaintBrushIcon className="w-8 h-8 text-purple-400" />,
+      title: "UI/UX Design",
+      description: "Intuitive and engaging user interfaces that provide exceptional user experiences.",
+      items: [
+        "User-Centered Design",
+        "Interactive Prototypes",
+        "Usability Testing",
+        "Motion Design"
+      ]
+    },
+    {
+      icon: <CloudArrowUpIcon className="w-8 h-8 text-purple-400" />,
+      title: "Backend Integration",
+      description: "Robust backend systems that power your mobile applications with scalable infrastructure.",
+      items: [
+        "API Development",
+        "Database Design",
+        "Cloud Integration",
+        "Serverless Architecture"
+      ]
+    },
+    {
+      icon: <BellAlertIcon className="w-8 h-8 text-purple-400" />,
+      title: "Advanced Features",
+      description: "Cutting-edge features that make your app stand out in the marketplace.",
+      items: [
+        "Push Notifications",
+        "In-App Purchases",
+        "Offline Functionality",
+        "Social Integration"
+      ]
+    },
+    {
+      icon: <ShieldCheckIcon className="w-8 h-8 text-purple-400" />,
+      title: "Security & Compliance",
+      description: "Enterprise-grade security measures to protect user data and ensure regulatory compliance.",
       items: [
         "Data Encryption",
-        "Secure API",
-        "Biometric Auth",
-        "SSL Certificate",
-        "Regular Updates",
-        "Compliance"
+        "Secure Authentication",
+        "Compliance (GDPR, HIPAA)",
+        "Penetration Testing"
       ]
     }
   ];
 
-  // Add testimonials data
+  // App Development Technologies
+  const technologies = [
+    { name: 'React Native', iconSrc: '/logos/react-native.svg', description: 'Cross-platform framework' },
+    { name: 'Flutter', iconSrc: '/logos/flutter.svg', description: 'UI toolkit for native apps' },
+    { name: 'Swift', iconSrc: '/logos/swift.svg', description: 'iOS development' },
+    { name: 'Kotlin', iconSrc: '/logos/kotlin.svg', description: 'Android development' },
+    { name: 'Firebase', iconSrc: '/logos/firebase.svg', description: 'Backend services' },
+    { name: 'GraphQL', iconSrc: '/logos/graphql.svg', description: 'API query language' },
+    { name: 'AWS Amplify', iconSrc: '/logos/aws.svg', description: 'Cloud services' },
+    { name: 'TensorFlow Lite', iconSrc: '/logos/tensorflow.svg', description: 'ML for mobile' },
+    { name: 'Realm', iconSrc: '/logos/realm.svg', description: 'Mobile database' },
+    { name: 'Fastlane', iconSrc: '/logos/fastlane.svg', description: 'CI/CD for mobile' }
+  ];
+
+  // Development Process Steps
+  const processSteps = [
+    {
+      title: "Discovery & Planning",
+      description: "We analyze your requirements, define the scope, and create a detailed roadmap for your app development."
+    },
+    {
+      title: "Design & Prototyping",
+      description: "Our designers create intuitive interfaces and interactive prototypes to visualize the user experience."
+    },
+    {
+      title: "Development & Testing",
+      description: "We build your app using agile methodologies with continuous integration and rigorous testing."
+    },
+    {
+      title: "Deployment & Support",
+      description: "We handle app store submissions and provide ongoing maintenance and performance optimization."
+    }
+  ];
+
+  // Statistics
+  const stats = [
+    { value: "450+", label: "Apps Delivered", icon: <DevicePhoneMobileIcon className="w-6 h-6" /> },
+    { value: "99%", label: "Client Satisfaction", icon: <ChartBarIcon className="w-6 h-6" /> },
+    { value: "40+", label: "Industries Served", icon: <CogIcon className="w-6 h-6" /> },
+    { value: "65+", label: "Expert Developers", icon: <UserGroupIcon className="w-6 h-6" /> }
+  ];
+
+  // Client testimonials
   const testimonials = [
     {
-      name: "David Wilson",
-      role: "Founder, FitLife App",
-      image: "/images/testimonials/david.jpg",
+      name: "Dr. Alexander Chen",
+      role: "Founder & CEO, HealthSync",
+      image: "/images/testimonials/alexander.jpg",
       rating: 5,
-      text: "The app development team created an exceptional fitness tracking app that exceeded our expectations. User engagement has skyrocketed!",
+      text: "The development team delivered a revolutionary healthcare platform that transformed our patient engagement model. Their expertise in HIPAA compliance and real-time data synchronization resulted in an app that both medical professionals and patients find indispensable.",
       metrics: {
-        "App Downloads": "1M+",
-        "User Retention": "92%",
-        "App Rating": "4.8/5"
+        "App Downloads": "2.5M+",
+        "User Retention": "94%",
+        "Clinical Efficiency": "+68%"
       }
     },
     {
-      name: "Emily Zhang",
-      role: "CTO, QuickServe",
-      image: "/images/testimonials/emily.jpg",
-      rating: 4.9,
-      text: "Our food delivery app has transformed our business. The team's expertise in real-time tracking and payment integration was invaluable.",
+      name: "Sarah Johnson",
+      role: "CMO, RetailConnect",
+      image: "/images/testimonials/sarah.jpg",
+      rating: 5,
+      text: "Our e-commerce app has completely transformed our business. The team delivered a seamless shopping experience with advanced features like AR product visualization and personalized recommendations that have significantly increased our conversion rates.",
       metrics: {
-        "Order Growth": "+300%",
-        "Delivery Time": "-45%",
-        "User Base": "500K+"
+        "Sales Increase": "156%",
+        "User Engagement": "4.2x",
+        "Cart Value": "+43%"
       }
     }
   ];
 
-  // Add mobile app projects data
-  const appProjects = [
+  // Project showcase
+  const projects = [
     {
-      title: "Healthcare Management App",
+      title: "HealthSync: Patient Care Platform",
       image: "/images/projects/healthcare-app.jpg",
-      challenge: "A healthcare provider needed a secure and user-friendly mobile app for patient management, appointment scheduling, and medical records access.",
-      solution: "We developed a HIPAA-compliant mobile app with real-time appointment booking, secure patient records, and integrated telemedicine features. The app includes biometric authentication and encrypted data storage."
+      challenge: "A leading healthcare provider needed a secure, HIPAA-compliant mobile platform to streamline patient care coordination, improve communication between healthcare professionals, and enhance the overall patient experience.",
+      solution: "We developed a comprehensive healthcare platform with real-time patient data synchronization, secure messaging, appointment scheduling, and telemedicine capabilities. The app features biometric authentication, end-to-end encryption, and seamless integration with existing hospital systems.",
+      results: "The solution increased patient satisfaction by 87%, reduced administrative workload by 35%, and improved care coordination efficiency by 42%. The app has been adopted by over 200 healthcare facilities nationwide."
     },
     {
-      title: "Food Delivery Platform",
+      title: "ShopSmart: E-Commerce Revolution",
+      image: "/images/projects/ecommerce-app.jpg",
+      challenge: "A rapidly growing retail chain needed a mobile commerce solution to compete with online giants, provide personalized shopping experiences, and integrate their physical and digital presence seamlessly.",
+      solution: "We created an innovative e-commerce app with AR product visualization, AI-powered recommendations, loyalty program integration, and omnichannel capabilities. The platform features offline browsing, instant checkout, and real-time inventory management across all retail locations.",
+      results: "Within six months of launch, the app generated a 156% increase in mobile sales, 43% higher average order value, and 78% improvement in customer retention. The AR features reduced return rates by 23%."
+    },
+    {
+      title: "DeliverEase: Food Delivery Platform",
       image: "/images/projects/food-delivery-app.jpg",
-      challenge: "A restaurant chain required a comprehensive food delivery platform to manage orders, track deliveries, and enhance customer experience.",
-      solution: "We built a feature-rich delivery app with real-time order tracking, multiple payment options, and an AI-powered recommendation system. The app includes a driver management system and analytics dashboard."
+      challenge: "A restaurant group needed a scalable, high-performance delivery platform capable of handling complex logistics across multiple markets, supporting thousands of concurrent orders, and providing personalized experiences.",
+      solution: "We developed an integrated delivery ecosystem with sophisticated route optimization algorithms, real-time GPS tracking, dynamic pricing models, and an AI-driven recommendation engine. The platform features a comprehensive merchant portal and driver management system.",
+      results: "The solution processed 1.5M+ monthly orders with 99.99% uptime, reduced delivery times by 42%, increased average order value by 28% through personalized recommendations, and achieved a 65% reduction in customer acquisition costs."
     }
   ];
-
-  const [currentProject, setCurrentProject] = useState(0);
-
-  const nextProject = () => {
-    setCurrentProject((prev) => (prev + 1) % appProjects.length);
-  };
-
-  const prevProject = () => {
-    setCurrentProject((prev) => (prev - 1 + appProjects.length) % appProjects.length);
-  };
 
   return (
     <div className="min-h-screen bg-primary">
+      <SEO 
+        title="Mobile App Development Services" 
+        description="Custom mobile app development services for iOS and Android. We build high-performance, user-friendly mobile applications that drive business growth." 
+        keywords={['mobile app development', 'iOS app development', 'Android app development', 'React Native', 'Flutter', 'custom mobile apps']} 
+      />
+      
       {/* Back Button */}
-      <button 
-        onClick={() => navigate('/services')}
-        className="fixed top-24 left-4 sm:left-8 z-50 bg-white/10 hover:bg-white/20 text-white rounded-full p-3 backdrop-blur-sm transition-all duration-300 group"
-      >
-        <ArrowLeftIcon className="w-6 h-6" />
-        <span className="absolute left-full ml-2 bg-white/10 text-white px-3 py-1 rounded-full text-sm opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">
-          Back to Services
-        </span>
-      </button>
-
-      {/* Hero Section with enhanced animation */}
-      <div className="relative overflow-hidden pt-32 pb-16">
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-600/20 to-transparent animate-fade-in"></div>
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6 animate-slide-up">
-              Mobile App Development
-            </h1>
-            <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto mb-12 animate-fade-in">
-              Create powerful mobile experiences that users love
-            </p>
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6">
-              <button 
-                onClick={() => navigate('/contact')}
-                className="bg-purple-600 hover:bg-purple-700 text-white rounded-xl py-4 px-8 text-lg font-medium transition-all duration-300 flex items-center gap-2 hover:scale-105 w-full sm:w-auto"
-              >
-                Start Your App Project
-                <ArrowRightIcon className="w-5 h-5" />
-              </button>
-              <button 
-                onClick={() => {
-                  const element = document.getElementById('testimonials');
-                  element?.scrollIntoView({ behavior: 'smooth' });
-                }}
-                className="bg-white/10 hover:bg-white/20 text-white rounded-xl py-4 px-8 text-lg font-medium transition-all duration-300 flex items-center gap-2 hover:scale-105 w-full sm:w-auto"
-              >
-                View Success Stories
-              </button>
-            </div>
-          </div>
-        </div>
+      <BackButton />
+      
+      {/* Hero Section */}
+      <ServiceHero 
+        title="Mobile App Development"
+        subtitle="Native & Cross-Platform Solutions"
+        description="Create powerful, intuitive mobile experiences that engage users and drive business growth across iOS and Android platforms."
+        image="/images/services/app-development-hero.jpg"
+        primaryCTA="Start Your App Project"
+        secondaryCTA="Explore Our Process"
+        secondaryAction="#process"
+      />
+      
+      {/* Features Section */}
+      <ServiceFeatures 
+        title="Comprehensive App Development Services"
+        description="We deliver end-to-end mobile solutions tailored to your business needs"
+        features={features}
+      />
+      
+      {/* Process Section */}
+      <div id="process">
+        <ServiceProcess 
+          title="Our App Development Process"
+          description="A proven methodology that delivers results"
+          steps={processSteps}
+          stats={stats}
+        />
       </div>
-
-      {/* Rating Overview Section */}
-      <div className="py-12 bg-white/5 backdrop-blur-sm">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="col-span-1 md:col-span-2 lg:col-span-4 text-center mb-8">
-              <div className="flex items-center justify-center gap-2 mb-4">
-                {[...Array(5)].map((_, i) => (
-                  <StarIconSolid key={i} className="w-8 h-8 text-yellow-400" />
-                ))}
-              </div>
-              <h2 className="text-3xl font-bold text-white mb-2">4.9 out of 5</h2>
-              <p className="text-gray-300">Based on 150+ app projects</p>
-            </div>
-            {[
-              { label: "Apps Launched", value: "100+", icon: "📱" },
-              { label: "Active Users", value: "2M+", icon: "👥" },
-              { label: "App Store Rating", value: "4.8", icon: "⭐" },
-              { label: "Client Satisfaction", value: "97%", icon: "🏆" }
-            ].map((stat, index) => (
-              <div key={index} className="bg-white/5 rounded-xl p-6 text-center transform hover:scale-105 transition-all duration-300">
-                <div className="text-4xl mb-4">{stat.icon}</div>
-                <div className="text-3xl font-bold text-purple-400 mb-2">{stat.value}</div>
-                <div className="text-gray-300">{stat.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Services Grid with hover effects */}
-      <div className="py-20 bg-primary/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-12 text-center">
-            Our App Development Services
-          </h2>
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {services.map((service, index) => (
-              <div 
-                key={index}
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
-              >
-                <div className="bg-purple-600 rounded-lg w-12 h-12 flex items-center justify-center mb-4">
-                  {service.icon}
-                </div>
-                <h3 className="text-xl font-bold text-white mb-3">{service.title}</h3>
-                <p className="text-gray-300">{service.description}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Client Success Stories */}
-      <div id="testimonials" className="py-20 bg-primary/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-12 text-center">
-            Client Success Stories
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {testimonials.map((testimonial, index) => (
-              <div 
-                key={index}
-                className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden hover:bg-white/10 transition-all duration-300"
-              >
-                <div className="p-8">
-                  <div className="flex items-center gap-4 mb-6">
-                    <img 
-                      src={testimonial.image} 
-                      alt={testimonial.name}
-                      className="w-16 h-16 rounded-full object-cover"
-                    />
-                    <div>
-                      <h3 className="text-xl font-bold text-white">{testimonial.name}</h3>
-                      <p className="text-gray-300">{testimonial.role}</p>
-                    </div>
-                  </div>
-                  
-                  <div className="flex items-center gap-2 mb-4">
-                    {[...Array(5)].map((_, i) => (
-                      <StarIconSolid 
-                        key={i}
-                        className={`w-5 h-5 ${i < Math.floor(testimonial.rating) ? 'text-yellow-400' : 'text-gray-400'}`}
-                      />
-                    ))}
-                    <span className="text-gray-300">({testimonial.rating})</span>
-                  </div>
-
-                  <p className="text-gray-300 mb-6 italic">"{testimonial.text}"</p>
-
-                  <div className="grid grid-cols-3 gap-4">
-                    {Object.entries(testimonial.metrics).map(([key, value], i) => (
-                      <div key={i} className="bg-white/5 rounded-lg p-3 text-center">
-                        <div className="text-purple-400 font-bold">{value}</div>
-                        <div className="text-gray-400 text-sm">{key}</div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
-      {/* Features Section with enhanced design */}
-      <div className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-12 text-center">
-            App Features We Deliver
-          </h2>
-          <div className="grid md:grid-cols-2 gap-8">
-            {features.map((category, index) => (
-              <div 
-                key={index}
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-8 hover:bg-white/10 transition-all duration-300"
-              >
-                <h3 className="text-2xl font-bold text-white mb-6">{category.title}</h3>
-                <div className="grid grid-cols-2 gap-4">
-                  {category.items.map((item, itemIndex) => (
-                    <div 
-                      key={itemIndex}
-                      className="flex items-center gap-3"
-                    >
-                      <div className="w-2 h-2 bg-purple-600 rounded-full"></div>
-                      <span className="text-gray-300">{item}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
+      
       {/* Technologies Section */}
-      <div className="py-20 bg-primary/50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl sm:text-4xl font-bold text-white mb-12 text-center">
-            Technologies We Use
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-8">
-            {technologies.map((tech, index) => (
-              <div 
-                key={index}
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 flex flex-col items-center hover:bg-white/10 transition-all duration-300 transform hover:scale-105"
-              >
-                <img 
-                  src={tech.icon} 
-                  alt={tech.name} 
-                  className="h-12 w-12 mb-4"
-                />
-                <span className="text-white font-medium">{tech.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div>
-
+      <ServiceTechnologies 
+        title="Technologies We Use"
+        description="We leverage cutting-edge technologies to build powerful mobile applications"
+        technologies={technologies}
+      />
+      
       {/* Projects Showcase Section */}
       <div className="relative py-16 bg-primary/50">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center text-white mb-12">
+          <h2 className="text-3xl font-bold text-center text-white mb-12" data-aos="fade-up">
             OUR MOBILE APP DEVELOPMENT PROJECTS
           </h2>
-
-          <div className="relative">
-            {/* Navigation Arrows */}
-            <button
-              onClick={prevProject}
-              className="absolute -left-4 sm:left-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 text-white p-2 sm:p-3 rounded-full backdrop-blur-sm transition-all"
-            >
-              <ArrowLeftIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-            <button
-              onClick={nextProject}
-              className="absolute -right-4 sm:right-0 top-1/2 -translate-y-1/2 z-10 bg-white/10 hover:bg-white/20 text-white p-2 sm:p-3 rounded-full backdrop-blur-sm transition-all"
-            >
-              <ArrowRightIcon className="w-5 h-5 sm:w-6 sm:h-6" />
-            </button>
-
-            {/* Project Content */}
-            <div className="grid md:grid-cols-2 gap-6 md:gap-8 items-center">
-              {/* Project Image */}
-              <div className="relative aspect-[4/3] rounded-xl overflow-hidden shadow-2xl">
-                <img
-                  src={appProjects[currentProject].image}
-                  alt={appProjects[currentProject].title}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Project Details */}
-              <div className="space-y-4 text-white">
-                <h3 className="text-2xl font-bold">
-                  {appProjects[currentProject].title}
-                </h3>
-                
-                <div className="space-y-4">
-                  <div>
-                    <h4 className="text-lg font-semibold mb-1">Challenge:</h4>
-                    <p className="text-sm text-gray-300 leading-relaxed">
-                      {appProjects[currentProject].challenge}
-                    </p>
-                  </div>
-                  
-                  <div>
-                    <h4 className="text-lg font-semibold mb-1">Solution:</h4>
-                    <p className="text-sm text-gray-300 leading-relaxed">
-                      {appProjects[currentProject].solution}
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Project Navigation Dots */}
-            <div className="flex justify-center gap-2 mt-6">
-              {appProjects.map((_, index) => (
-                <button
-                  key={index}
-                  onClick={() => setCurrentProject(index)}
-                  className={`w-2 h-2 rounded-full transition-all ${
-                    currentProject === index ? "bg-white w-6" : "bg-white/50"
-                  }`}
-                />
-              ))}
-            </div>
-          </div>
-
+          
+          {/* Using the ProjectSlider component */}
+          <ProjectSlider projects={projects} />
+          
           {/* View All Cases Button */}
-          <div className="text-center mt-8">
+          <div className="text-center mt-8" data-aos="fade-up">
             <Link
               to="/case-studies"
               className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg text-base font-medium transition-all duration-300 transform hover:scale-105"
@@ -424,26 +285,22 @@ const AppDevelopment = () => {
           </div>
         </div>
       </div>
-
+      
+      {/* Testimonials Section */}
+      <ServiceTestimonials 
+        title="Client Success Stories"
+        testimonials={testimonials}
+      />
+      
       {/* CTA Section */}
-      <div className="py-20">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-r from-purple-600 to-purple-800 rounded-2xl p-8 sm:p-12 text-center relative overflow-hidden">
-            <div className="absolute inset-0 bg-pattern opacity-10"></div>
-            <h2 className="text-3xl sm:text-4xl font-bold text-white mb-6 relative z-10">
-              Ready to Build Your App?
-            </h2>
-            <p className="text-xl text-white/90 mb-8 max-w-2xl mx-auto relative z-10">
-              Let's turn your app idea into reality with our expert development team.
-            </p>
-            <button className="bg-white text-purple-600 hover:bg-gray-100 rounded-xl py-4 px-8 text-lg font-medium transition-all duration-300 transform hover:scale-105 relative z-10">
-              Get Started Now
-            </button>
-          </div>
-        </div>
-      </div>
+      <ServiceCTA 
+        title="Ready to Build Your App?"
+        description="Let's turn your app idea into reality with our expert development team."
+        buttonText="Get Started Now"
+        gradient="from-purple-600 to-indigo-700"
+      />
     </div>
   );
 };
 
-export default AppDevelopment; 
+export default AppDevelopment;

@@ -1,4 +1,7 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
+import { initAOS, refreshAOS } from '../utils/animation';
+import CountUp from 'react-countup';
+import SEO from '../components/SEO';
 import { useNavigate } from 'react-router-dom';
 import {
   CodeBracketIcon,
@@ -66,44 +69,61 @@ const ServiceCard = ({ title, description, icon, features, route, metrics }) => 
   const navigate = useNavigate();
 
   return (
-    <div className="bg-white/5 backdrop-blur-sm rounded-2xl p-6 sm:p-8 hover:bg-white/10 transition-all duration-300 group">
-      <div className="flex items-start gap-4 mb-6">
-        <div className="p-3 bg-gradient-to-br from-purple-600 to-purple-700 rounded-lg group-hover:scale-110 transition-transform">
-          {icon}
-        </div>
-        <div>
-          <h3 className="text-xl sm:text-2xl font-bold text-white mb-2">{title}</h3>
-          <p className="text-gray-300">{description}</p>
-        </div>
-      </div>
-      <div className="grid grid-cols-2 gap-4 mb-8">
-        {metrics.map((metric, index) => (
-          <div key={index} className="bg-white/5 rounded-lg p-4 text-center">
-            <div className="text-2xl font-bold text-purple-400 mb-1">{metric.value}</div>
-            <div className="text-sm text-gray-300">{metric.label}</div>
-          </div>
-        ))}
-      </div>
-      <div className="space-y-4 mb-8">
-        {features.map((feature, index) => (
-          <div key={index} className="flex items-center gap-3">
-            <CheckCircleIcon className="w-5 h-5 text-green-400 flex-shrink-0" />
-            <span className="text-gray-300">{feature}</span>
-          </div>
-        ))}
-      </div>
-      <button
-        onClick={() => navigate(route)}
-        className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl py-3 px-6 flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-105 relative overflow-hidden group/btn"
-      >
-        {/* Add hover effect overlay */}
-        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-500/0 via-white/20 to-purple-500/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+    <div className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm rounded-2xl p-8 hover:shadow-glow transition-all duration-500 group border border-white/10 relative overflow-hidden">
+      {/* Decorative elements */}
+      <div className="absolute -top-20 -right-20 w-40 h-40 bg-purple-500/10 rounded-full blur-xl group-hover:bg-purple-500/20 transition-all duration-500"></div>
+      <div className="absolute -bottom-20 -left-20 w-40 h-40 bg-indigo-500/10 rounded-full blur-xl group-hover:bg-indigo-500/20 transition-all duration-500"></div>
 
-        <span className="relative z-10 flex items-center justify-center gap-2">
-          Learn More
-          <ArrowRightIcon className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-300" />
-        </span>
-      </button>
+      <div className="relative z-10">
+        <div className="flex items-start gap-6 mb-8">
+          <div className="p-4 bg-gradient-to-br from-purple-600 to-indigo-700 rounded-xl shadow-lg group-hover:scale-110 transition-transform duration-500">
+            {icon}
+          </div>
+          <div>
+            <h3 className="text-2xl sm:text-3xl font-bold text-white mb-3 group-hover:text-purple-300 transition-colors duration-300">{title}</h3>
+            <p className="text-gray-300 text-lg">{description}</p>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-2 gap-4 mb-8">
+          {metrics.map((metric, index) => (
+            <div
+              key={index}
+              className="bg-white/5 rounded-xl p-4 text-center border border-white/5 group-hover:border-purple-500/20 transition-all duration-300"
+            >
+              <div className="text-2xl font-bold text-purple-400 mb-1 group-hover:text-purple-300 transition-colors duration-300">{metric.value}</div>
+              <div className="text-sm text-gray-300">{metric.label}</div>
+            </div>
+          ))}
+        </div>
+
+        <div className="space-y-4 mb-8">
+          {features.map((feature, index) => (
+            <div
+              key={index}
+              className="flex items-center gap-3 group/item hover:translate-x-2 transition-transform duration-300"
+            >
+              <div className="w-5 h-5 bg-gradient-to-r from-purple-500 to-indigo-500 rounded-full flex items-center justify-center shadow-md group-hover/item:scale-125 transition-transform duration-300">
+                <CheckCircleIcon className="w-3 h-3 text-white" />
+              </div>
+              <span className="text-gray-300 text-lg group-hover/item:text-white transition-colors duration-300">{feature}</span>
+            </div>
+          ))}
+        </div>
+
+        <button
+          onClick={() => navigate(route)}
+          className="w-full bg-gradient-to-r from-purple-600 to-indigo-700 hover:from-purple-700 hover:to-indigo-800 text-white rounded-xl py-4 px-6 transition-all duration-300 flex items-center justify-center gap-2 shadow-lg hover:shadow-purple-500/20 text-lg font-medium relative overflow-hidden group-hover:scale-105"
+        >
+          {/* Button shine effect */}
+          <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-white/0 via-white/20 to-white/0 -translate-x-full group-hover:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+
+          <span className="relative z-10 flex items-center justify-center gap-2">
+            Explore Service
+            <ArrowRightIcon className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-300" />
+          </span>
+        </button>
+      </div>
     </div>
   );
 };
@@ -297,40 +317,40 @@ const Services = () => {
   const services = [
     {
       title: "Web Development",
-      description: "Create stunning, responsive websites and web applications tailored to your business needs.",
+      description: "Transform your digital presence with cutting-edge web solutions that drive growth and engagement.",
       icon: <CodeBracketIcon className="w-6 h-6 text-white" />,
       features: [
-        "Custom Website Development",
-        "E-commerce Solutions",
-        "Progressive Web Apps",
-        "CMS Development",
-        "API Integration",
-        "Performance Optimization"
+        "Enterprise-grade Web Applications",
+        "Advanced E-commerce Platforms",
+        "Progressive Web Apps (PWAs)",
+        "Headless CMS Architecture",
+        "RESTful & GraphQL API Development",
+        "Performance & SEO Optimization"
       ],
       metrics: [
-        { value: "200+", label: "Projects Delivered" },
-        { value: "99.9%", label: "Uptime" },
-        { value: "4.9/5", label: "Client Rating" },
-        { value: "<2s", label: "Load Time" }
+        { value: "250+", label: "Projects Delivered" },
+        { value: "99.9%", label: "Uptime Guarantee" },
+        { value: "4.9/5", label: "Client Satisfaction" },
+        { value: "<1.5s", label: "Average Load Time" }
       ],
       route: "/services/web-development"
     },
     {
       title: "App Development",
-      description: "Build powerful, user-friendly mobile applications for iOS and Android platforms.",
+      description: "Create immersive mobile experiences that captivate users and deliver measurable business results.",
       icon: <DevicePhoneMobileIcon className="w-6 h-6 text-white" />,
       features: [
-        "Native iOS & Android Apps",
-        "Cross-platform Development",
-        "UI/UX Design",
-        "App Maintenance & Support",
-        "App Store Optimization",
-        "Push Notification Integration"
+        "Native iOS & Android Development",
+        "Cross-platform Solutions (React Native/Flutter)",
+        "Advanced UI/UX Design Systems",
+        "Continuous Integration & Deployment",
+        "App Analytics & Performance Monitoring",
+        "AI & ML Integration"
       ],
       metrics: [
-        { value: "150+", label: "Apps Launched" },
-        { value: "4.8/5", label: "App Store Rating" },
-        { value: "2M+", label: "Total Downloads" },
+        { value: "180+", label: "Apps Launched" },
+        { value: "4.8/5", label: "Average App Rating" },
+        { value: "3.5M+", label: "Total Downloads" },
         { value: "98%", label: "Client Satisfaction" }
       ],
       route: "/services/app-development"
@@ -361,10 +381,10 @@ const Services = () => {
   ];
 
   const stats = [
-    { value: "350+", label: "Projects Completed", icon: <ChartBarIcon className="w-6 h-6" /> },
-    { value: "10+", label: "Years Experience", icon: <ClockIcon className="w-6 h-6" /> },
-    { value: "50+", label: "Expert Developers", icon: <UserGroupIcon className="w-6 h-6" /> },
-    { value: "98%", label: "Client Satisfaction", icon: <CheckCircleIcon className="w-6 h-6" /> }
+    { value: "450+", label: "Projects Delivered", icon: <ChartBarIcon className="w-6 h-6" /> },
+    { value: "12+", label: "Years of Excellence", icon: <ClockIcon className="w-6 h-6" /> },
+    { value: "65+", label: "Tech Specialists", icon: <UserGroupIcon className="w-6 h-6" /> },
+    { value: "99%", label: "Client Retention", icon: <CheckCircleIcon className="w-6 h-6" /> }
   ];
 
   const faqs = [
@@ -599,6 +619,9 @@ const Services = () => {
   ];
 
   useEffect(() => {
+    // Initialize AOS animations
+    initAOS();
+
     const sections = document.querySelectorAll('.lazy-section');
     const observer = new IntersectionObserver(
       (entries) => {
@@ -608,6 +631,8 @@ const Services = () => {
               ...prev,
               [entry.target.id]: true
             }));
+            // Refresh AOS when new content becomes visible
+            refreshAOS();
           }
         });
       },
@@ -701,36 +726,88 @@ const Services = () => {
   };
 
   return (
-    <div className="min-h-screen bg-primary py-20 sm:py-24">
+    <div className="min-h-screen bg-primary py-28 sm:py-32">
+      <SEO
+        title="Our Services"
+        description="Innovative digital solutions that transform businesses and drive measurable results. Explore our web development, app development, and digital marketing services."
+        keywords={['web development', 'app development', 'digital solutions', 'software development', 'UI/UX design', 'digital marketing']}
+      />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16 sm:mb-20">
-          <div className="inline-block mb-4">
-            <span className="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-purple-500/20 text-purple-300">
-              Trusted by 350+ Businesses
-            </span>
+        <div className="text-center mb-16 sm:mb-20 relative">
+          {/* Decorative elements */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+          <div className="absolute top-1/3 left-1/3 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl opacity-50 pointer-events-none"></div>
+
+          <div className="relative z-10">
+            <div className="inline-block mb-4 animate-float">
+              <span className="inline-flex items-center px-4 py-2 rounded-full text-sm font-medium bg-gradient-to-r from-purple-500/20 to-indigo-500/20 text-purple-300 border border-purple-500/20 shadow-glow-sm">
+                <StarIcon className="w-4 h-4 mr-2" />
+                Trusted by 600+ Global Enterprises
+              </span>
+            </div>
+
+            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-bold mb-8 bg-clip-text text-transparent bg-gradient-to-r from-white via-purple-200 to-white" data-aos="zoom-in" data-aos-duration="1000">
+              Innovative <span className="text-purple-400">Solutions</span>
+            </h1>
+
+            <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto mb-8 leading-relaxed" data-aos="fade-up" data-aos-delay="200">
+              Creating exceptional digital experiences that transform businesses and drive measurable results
+            </p>
+
+            <p className="text-gray-400 max-w-2xl mx-auto text-lg" data-aos="fade-up" data-aos-delay="400">
+              Our team of experts combines technical excellence with strategic thinking to deliver custom solutions that address your most complex challenges
+            </p>
           </div>
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-white mb-6">
-            Our Services
-          </h1>
-          <p className="text-xl sm:text-2xl text-gray-300 max-w-3xl mx-auto mb-4">
-            Transform your ideas into reality with our professional development services
-          </p>
-          <p className="text-gray-400 max-w-2xl mx-auto">
-            From concept to deployment, we deliver cutting-edge solutions that help businesses grow
-          </p>
         </div>
 
-        <div id="stats" className="lazy-section grid grid-cols-2 md:grid-cols-4 gap-6 mb-20">
+        <div id="stats" className="lazy-section mb-20 mt-12">
           <Suspense fallback={<LoadingSkeleton type="stats" />}>
-            {stats.map((stat, index) => (
-              <div key={index} className="bg-white/5 backdrop-blur-sm rounded-xl p-6 text-center transform hover:scale-105 transition-all duration-300">
-                <div className="bg-purple-600/20 rounded-full w-12 h-12 flex items-center justify-center mx-auto mb-4">
-                  {stat.icon}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              {stats.map((stat, index) => (
+                <div
+                  key={index}
+                  className="bg-gradient-to-br from-white/5 to-white/10 backdrop-blur-sm rounded-xl p-6 text-center transform hover:scale-105 transition-all duration-500 border border-white/5 hover:border-purple-500/20 hover:shadow-glow group relative overflow-hidden"
+                  data-aos={index % 2 === 0 ? "fade-up" : "fade-down"}
+                  data-aos-delay={index * 100}
+                >
+                  {/* Background glow effect */}
+                  <div className="absolute -inset-0.5 bg-gradient-to-r from-purple-500/0 to-indigo-500/0 opacity-0 group-hover:opacity-100 rounded-xl blur group-hover:from-purple-500/10 group-hover:to-indigo-500/10 transition-all duration-500"></div>
+
+                  <div className="relative z-10">
+                    <div className="bg-gradient-to-br from-purple-600/20 to-indigo-600/20 rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 group-hover:from-purple-600/30 group-hover:to-indigo-600/30 transition-all duration-500 shadow-glow-sm">
+                      {stat.icon}
+                    </div>
+                    <div className="text-3xl font-bold text-white mb-2 group-hover:text-purple-300 transition-colors duration-300">
+                      {stat.value.includes('+') ? (
+                        <>
+                          <CountUp
+                            end={parseInt(stat.value.replace('+', ''))}
+                            duration={2.5}
+                            separator=","
+                            enableScrollSpy
+                            scrollSpyDelay={500}
+                          />
+                          <span>+</span>
+                        </>
+                      ) : stat.value.includes('%') ? (
+                        <>
+                          <CountUp
+                            end={parseInt(stat.value.replace('%', ''))}
+                            duration={2.5}
+                            enableScrollSpy
+                            scrollSpyDelay={500}
+                          />
+                          <span>%</span>
+                        </>
+                      ) : (
+                        stat.value
+                      )}
+                    </div>
+                    <div className="text-gray-400 group-hover:text-gray-300 transition-colors duration-300">{stat.label}</div>
+                  </div>
                 </div>
-                <div className="text-3xl font-bold text-white mb-2">{stat.value}</div>
-                <div className="text-gray-400">{stat.label}</div>
-              </div>
-            ))}
+              ))}
+            </div>
           </Suspense>
         </div>
 
