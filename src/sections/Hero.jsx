@@ -14,13 +14,27 @@ const Hero = () => {
     // Show popup after a short delay
     const timer = setTimeout(() => {
       setIsFormOpen(true);
+      // Prevent scrolling when popup is open
+      document.body.classList.add('no-scroll');
       // Automatically select the internship option for better UX
       // Comment this line if you want users to choose an option
       // setSelectedOption('internship');
     }, 500); // 0.5 second delay
 
-    return () => clearTimeout(timer);
+    // Cleanup function to ensure scrolling is re-enabled if component unmounts
+    return () => {
+      clearTimeout(timer);
+      document.body.classList.remove('no-scroll');
+    };
   }, []);
+
+  // Handle popup close and restore scrolling
+  const handleClosePopup = () => {
+    setIsFormOpen(false);
+    setSelectedOption(null);
+    // Re-enable scrolling
+    document.body.classList.remove('no-scroll');
+  };
 
   const handleOptionSelect = (option) => {
     setSelectedOption(option);
@@ -328,19 +342,16 @@ const Hero = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-start p-4 pt-8"
+          className="fixed inset-0 bg-black bg-opacity-70 z-50 flex justify-center items-start p-4 pt-48 overflow-y-auto"
         >
           <motion.div
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
             transition={{ type: "spring", damping: 20, stiffness: 250, mass: 1 }}
-            className="bg-white rounded-2xl w-full max-w-md relative max-h-[90vh] flex flex-col shadow-xl mt-52 sm:mt-64">
+            className="bg-white rounded-2xl w-full max-w-md relative max-h-[90vh] flex flex-col shadow-xl mt-16 sm:mt-24">
             <button
-              onClick={() => {
-                setIsFormOpen(false);
-                setSelectedOption(null);
-              }}
+              onClick={handleClosePopup}
               className="absolute right-4 top-4 text-gray-500 hover:text-gray-700 z-10"
             >
               <XMarkIcon className="w-6 h-6" />
@@ -388,17 +399,11 @@ const Hero = () => {
                 <>
                   {selectedOption === 'services' ? (
                     <ServiceRequestForm
-                      onClose={() => {
-                        setIsFormOpen(false);
-                        setSelectedOption(null);
-                      }}
+                      onClose={handleClosePopup}
                     />
                   ) : (
                     <InternshipForm
-                      onClose={() => {
-                        setIsFormOpen(false);
-                        setSelectedOption(null);
-                      }}
+                      onClose={handleClosePopup}
                     />
                   )}
                 </>

@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Suspense, lazy } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
+import {
   CodeBracketIcon,
   DevicePhoneMobileIcon,
   ArrowRightIcon,
@@ -94,10 +94,15 @@ const ServiceCard = ({ title, description, icon, features, route, metrics }) => 
       </div>
       <button
         onClick={() => navigate(route)}
-        className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl py-3 px-6 flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-105"
+        className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl py-3 px-6 flex items-center justify-center gap-2 transition-all duration-300 group-hover:scale-105 relative overflow-hidden group/btn"
       >
-        Learn More
-        <ArrowRightIcon className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+        {/* Add hover effect overlay */}
+        <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-500/0 via-white/20 to-purple-500/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+
+        <span className="relative z-10 flex items-center justify-center gap-2">
+          Learn More
+          <ArrowRightIcon className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-300" />
+        </span>
       </button>
     </div>
   );
@@ -105,7 +110,7 @@ const ServiceCard = ({ title, description, icon, features, route, metrics }) => 
 
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
-  
+
   return (
     <div className="border-b border-white/10">
       <button
@@ -747,13 +752,13 @@ const Services = () => {
                 <div className="overflow-x-auto pb-4 hide-scrollbar scroll-smooth" id="case-studies-scroll">
                   <div className="flex gap-6 px-4 sm:px-6 min-w-full">
                     {[...caseStudies, ...caseStudies].map((study, index) => (
-                      <CaseStudyCard 
-                        key={index} 
-                        {...study} 
+                      <CaseStudyCard
+                        key={index}
+                        {...study}
                         imageComponent={
-                          <LazyImage 
-                            src={study.image} 
-                            alt={study.title} 
+                          <LazyImage
+                            src={study.image}
+                            alt={study.title}
                             className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                           />
                         }
@@ -915,11 +920,11 @@ export default Services;
   .hide-scrollbar::-webkit-scrollbar {
     display: none;
   }
-  
+
   .scroll-smooth {
     scroll-behavior: smooth;
   }
-  
+
   #case-studies-scroll {
     -webkit-overflow-scrolling: touch;
   }

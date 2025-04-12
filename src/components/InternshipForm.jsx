@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore';
 import { db } from '../firebase';
@@ -21,6 +21,17 @@ const InternshipForm = ({ onClose }) => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
   const [errors, setErrors] = useState({});
+
+  // Prevent background scrolling when form is open
+  useEffect(() => {
+    // Add no-scroll class to body
+    document.body.classList.add('no-scroll');
+
+    // Re-enable scrolling on unmount
+    return () => {
+      document.body.classList.remove('no-scroll');
+    };
+  }, []);
 
   // Education options
   const educationOptions = [
@@ -198,7 +209,7 @@ const InternshipForm = ({ onClose }) => {
   return (
     <AnimatePresence>
       <motion.div
-        className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-24"
+        className="fixed inset-0 bg-black/70 backdrop-blur-sm flex items-start justify-center z-50 p-4 pt-32 sm:pt-48 overflow-y-auto"
         onClick={() => !isSubmitting && onClose()}
         initial="hidden"
         animate="visible"
@@ -206,7 +217,7 @@ const InternshipForm = ({ onClose }) => {
         variants={overlayVariants}
       >
         <motion.div
-          className="bg-white rounded-2xl overflow-hidden w-full max-w-md relative"
+          className="bg-white rounded-2xl overflow-hidden w-full max-w-md relative max-h-[90vh] shadow-xl"
           onClick={e => e.stopPropagation()}
           variants={modalVariants}
         >

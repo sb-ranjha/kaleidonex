@@ -154,12 +154,17 @@ const ServiceHighlight = () => {
 
               <motion.button
                 onClick={() => navigate(service.route)}
-                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl py-4 px-6 flex items-center justify-center gap-2 transition-all duration-300 shadow-md hover:shadow-glow text-lg font-medium"
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white rounded-xl py-4 px-6 flex items-center justify-center gap-2 transition-all duration-300 shadow-md hover:shadow-glow text-lg font-medium relative overflow-hidden group/btn"
                 whileHover={{ scale: 1.03 }}
                 whileTap={{ scale: 0.98 }}
               >
-                Learn More
-                <ArrowRightIcon className="w-5 h-5" />
+                {/* Add hover effect overlay */}
+                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-purple-500/0 via-white/20 to-purple-500/0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-1000 ease-in-out"></span>
+
+                <span className="relative z-10 flex items-center justify-center gap-2">
+                  Learn More
+                  <ArrowRightIcon className="w-5 h-5 group-hover/btn:translate-x-1 transition-transform duration-300" />
+                </span>
               </motion.button>
             </motion.div>
           ))}
